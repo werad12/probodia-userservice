@@ -144,7 +144,39 @@ public class RecordController {
         return new ResponseEntity<>(result,HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/meal")
+    @ApiOperation(value = "음식 기록 삭제", notes = "음식 기록을 삭제한다.")
+    public ResponseEntity<Long> deleteMeal(@RequestBody RecordDeleteRequest request){
 
+        //user 찾기
+        User user = getUser(request.getUserId());
+
+        //log.info("user Id : {}",user.getUserId());
+
+        //record 찾기
+        Optional<Meal> deleteRecord = recordService.findMealByUserAndId(user, request.getRecordId());
+        log.info("delete Record : {}",deleteRecord);
+        if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
+
+        return new ResponseEntity<>(recordService.deleteMeal(deleteRecord.get()),HttpStatus.OK);
+    }
+
+    @PutMapping("/meal")
+    @ApiOperation(value = "음식 기록 수정", notes = "음식 기록을 수정한다.")
+    public ResponseEntity<MealResponseVO> updateMeal(@RequestBody MealUpdateVO requestRecord){
+
+        //user 찾기
+        User user = getUser(requestRecord.getUserId());
+
+        //음식 기록 저장
+        Optional<Meal> updateRecord = recordService.findMealByUserAndId(user, requestRecord.getRecordId());
+        if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
+
+        //음식 기록 수정
+        MealResponseVO result = recordService.updateMeal(updateRecord.get(), requestRecord);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 
 
 

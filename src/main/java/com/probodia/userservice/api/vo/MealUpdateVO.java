@@ -6,15 +6,20 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel(value = "음식 기록 모델")
+@ApiModel(value = "음식 수정 모델")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class MealVO {
+public class MealUpdateVO {
+
+    @ApiModelProperty(value = "음식 ID", required = true,example = "123123")
+    @NotNull(message = "Record Id cannot be null")
+    private Long recordId;
 
     @ApiModelProperty(value = "유저 ID", required = true,example = "123123")
     @NotNull(message = "User Id cannot be null")
@@ -26,6 +31,6 @@ public class MealVO {
 
     @ApiModelProperty(value = "종류에 따른 음식의 정보", required = true)
     @NotNull(message = "Meal Detail cannot be null")
-    private List<MealDetailVO> mealDetails;
+    private List<MealDetailUpdateVO> mealDetails;
 
 }

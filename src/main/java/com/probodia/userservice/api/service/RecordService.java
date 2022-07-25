@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -173,5 +174,60 @@ public class RecordService {
 
 
         return result;
+    }
+
+    public Optional<Meal> findMealByUserAndId(User user, Long recordId) {
+        return mealRepository.findByUserAndId(user,recordId);
+    }
+
+    public Long deleteMeal(Meal meal) {
+        Long ret = meal.getId();
+        /*
+        List<MealDetail> mealDetails = meal.getMealDetails();
+        for(MealDetail detail : mealDetails){
+            mealDetailRepository.delete(detail);
+        }
+        */
+        mealRepository.delete(meal);
+        return ret;
+    }
+
+    public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
+        MealResponseVO mealResponse = new MealResponseVO();
+        List<MealDetailResponseVO> mealDetailResponse = new ArrayList<>();
+
+        mealResponse.setMealId(meal.getId());
+        mealResponse.setTimeTag(requestRecord.getTimeTag());
+        mealResponse.setUserId(requestRecord.getUserId());
+
+        meal.setTimeTag(requestRecord.getTimeTag());
+        for(MealDetailUpdateVO detail : requestRecord.getMealDetails()){
+            Optional<MealDetail> detailEntity =
+                    mealDetailRepository.findById(detail.getMealDetailId());
+            if(detailEntity.isEmpty())
+                throw new NoSuchElementException("Not found Meal Detail matched by mealDetailId");
+
+            MealDetail updateTarget = detailEntity.get();
+            updateTarget.setFoodName(detail.getFoodName());
+            updateTarget.setCalorie(detail.getCalories());
+            updateTarget.setImageUrl(detail.getImageUrl());
+            updateTarget.setBloodSugar(detail.getBloodSugar());
+            updateTarget.setFoodId(detail.getFoodId());
+
+            MealDetailResponseVO detailResponse = MealDetailResponseVO.builder()
+                    .mealDetailId(updateTarget.getId()).calories(updateTarget.getCalorie())
+                    .imageUrl(updateTarget.getImageUrl()).bloodSugar(updateTarget.getBloodSugar())
+                    .foodName(updateTarget.getFoodName()).build();
+
+            mealDetailResponse.add(detailResponse);
+
+            mealDetailRepository.save(updateTarget);
+        }
+
+        mealResponse.setMealDetails(mealDetailResponse);
+
+        mealRepository.save(meal);
+
+        return mealResponse;
     }
 }
