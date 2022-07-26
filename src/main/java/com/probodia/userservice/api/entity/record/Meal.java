@@ -30,7 +30,7 @@ public class Meal extends Record{
     @Column(name = "TOTAL_IMAGE_URL")
     private String totalImageUrl;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "MEAL_ID")
     private List<MealDetail> mealDetails = new ArrayList<>();
 

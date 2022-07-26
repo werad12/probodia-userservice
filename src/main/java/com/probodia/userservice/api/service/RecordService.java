@@ -1,14 +1,8 @@
 package com.probodia.userservice.api.service;
 
-import com.probodia.userservice.api.entity.record.BPressure;
-import com.probodia.userservice.api.entity.record.BSugar;
-import com.probodia.userservice.api.entity.record.Meal;
-import com.probodia.userservice.api.entity.record.MealDetail;
+import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
-import com.probodia.userservice.api.repository.record.BPressureRepository;
-import com.probodia.userservice.api.repository.record.BSugarRepository;
-import com.probodia.userservice.api.repository.record.MealDetailRepository;
-import com.probodia.userservice.api.repository.record.MealRepository;
+import com.probodia.userservice.api.repository.record.*;
 import com.probodia.userservice.api.repository.user.UserRepository;
 import com.probodia.userservice.api.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +20,16 @@ public class RecordService {
     private BSugarRepository bSugarRepository;
     private MealRepository mealRepository;
     private MealDetailRepository mealDetailRepository;
+    private RecordRepository recordRepository;
 
     @Autowired
     public RecordService(BPressureRepository bPressureRepository, BSugarRepository bSugarRepository,
-                         MealRepository mealRepository, MealDetailRepository mealDetailRepository) {
+                         MealRepository mealRepository, MealDetailRepository mealDetailRepository, RecordRepository recordRepository) {
         this.bPressureRepository = bPressureRepository;
         this.bSugarRepository = bSugarRepository;
         this.mealRepository = mealRepository;
         this.mealDetailRepository = mealDetailRepository;
+        this.recordRepository = recordRepository;
     }
 
     public BSugarResponse saveSugar(String timeTag, Integer bloodSugar, User user) {
@@ -44,11 +40,15 @@ public class RecordService {
         bSugar.setBloodSugar(bloodSugar);
         BSugar saved = bSugarRepository.save(bSugar);
 
+        return bSugarConvert(saved);
+    }
+
+    public BSugarResponse bSugarConvert(BSugar bSugar){
         return
-                BSugarResponse.builder().bloodSugar(bloodSugar)
-                        .timeTag(timeTag)
-                        .userId(user.getUserId())
-                        .recordId(saved.getId())
+                BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
+                        .timeTag(bSugar.getTimeTag())
+                        .userId(bSugar.getUser().getUserId())
+                        .recordId(bSugar.getId())
                         .build();
     }
 
@@ -60,40 +60,38 @@ public class RecordService {
         bPressure.setBloodPressure(bloodPressure);
         BPressure saved = bPressureRepository.save(bPressure);
 
+        return bPressureConvert(saved);
+    }
+
+    public BPressureResponse bPressureConvert(BPressure bPressure){
         return
-                BPressureResponse.builder().bloodPressure(bloodPressure)
-                        .timeTag(timeTag)
-                        .userId(user.getUserId())
-                        .recordId(saved.getId())
+                BPressureResponse.builder().bloodPressure(bPressure.getBloodPressure())
+                        .timeTag(bPressure.getTimeTag())
+                        .userId(bPressure.getUser().getUserId())
+                        .recordId(bPressure.getId())
                         .build();
     }
+
+
+
 
     public BSugarResponse updateBSugar(BSugar sugar,BSugarUpdateVO updateVO){
         sugar.setBloodSugar(updateVO.getBloodSugar());
         sugar.setTimeTag(updateVO.getTimeTag());
 
-        bSugarRepository.save(sugar);
+        BSugar saved = bSugarRepository.save(sugar);
 
-        return
-                BSugarResponse.builder().bloodSugar(updateVO.getBloodSugar())
-                        .timeTag(updateVO.getTimeTag())
-                        .userId(sugar.getUser().getUserId())
-                        .recordId(sugar.getId())
-                        .build();
+        return bSugarConvert(saved);
     }
 
     public BPressureResponse updateBPressure(BPressure bPressure, BPressureUpdateVO requestRecord) {
         bPressure.setBloodPressure(requestRecord.getBloodPressure());
         bPressure.setTimeTag(requestRecord.getTimeTag());
 
-        bPressureRepository.save(bPressure);
+        BPressure saved = bPressureRepository.save(bPressure);
 
         return
-                BPressureResponse.builder().bloodPressure(bPressure.getBloodPressure())
-                        .timeTag(bPressure.getTimeTag())
-                        .userId(requestRecord.getUserId())
-                        .recordId(bPressure.getId())
-                        .build();
+                bPressureConvert(saved);
 
     }
 
@@ -127,34 +125,26 @@ public class RecordService {
 
     public MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
 
-        MealResponseVO result = new MealResponseVO();
 
-        result.setTimeTag(meal.getTimeTag());
-        result.setUserId(meal.getUser().getUserId());
 
         List<MealDetailResponseVO> resultDetails = new ArrayList<>();
 
         for(MealDetailVO requestDetail : mealDetails){
             MealDetail col = new MealDetail();
-            MealDetailResponseVO resultCol = new MealDetailResponseVO();
 
             col.setFoodName(requestDetail.getFoodName());
-            resultCol.setFoodName(requestDetail.getFoodName());
 
 
             if(requestDetail.getCalories() != null){
                 col.setCalorie(requestDetail.getCalories());
-                resultCol.setCalories(requestDetail.getCalories());
             }
 
             if(requestDetail.getImageUrl() != null){
                 col.setImageUrl(requestDetail.getImageUrl());
-                resultCol.setImageUrl(requestDetail.getImageUrl());
             }
 
             if(requestDetail.getBloodSugar() != null){
                 col.setBloodSugar(requestDetail.getBloodSugar());
-                resultCol.setBloodSugar(requestDetail.getBloodSugar());
             }
 
             if(requestDetail.getFoodId() != null){
@@ -162,19 +152,34 @@ public class RecordService {
             }
 
             meal.getMealDetails().add(col);
-
-            MealDetail saved = mealDetailRepository.save(col);
-            resultCol.setMealDetailId(saved.getId());
-            resultDetails.add(resultCol);
+            mealDetailRepository.save(col);
         }
 
-        result.setMealDetails(resultDetails);
         Meal savedMeal = mealRepository.save(meal);
-        result.setMealId(savedMeal.getId());
 
 
-        return result;
+        return mealConvert(savedMeal);
     }
+
+    public MealResponseVO mealConvert(Meal saved){
+        List<MealDetailResponseVO> detailConverted = new ArrayList<>();
+        for(MealDetail detail : saved.getMealDetails()){
+            detailConverted.add(mealDetailConvert(detail));
+        }
+
+        return MealResponseVO.builder().mealId(saved.getId())
+                .mealDetails(detailConverted)
+                .timeTag(saved.getTimeTag()).userId(saved.getUser().getUserId())
+                .build();
+
+    }
+
+    MealDetailResponseVO mealDetailConvert(MealDetail saved){
+        return MealDetailResponseVO.builder().mealDetailId(saved.getId())
+                .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
+                .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
+    }
+
 
     public Optional<Meal> findMealByUserAndId(User user, Long recordId) {
         return mealRepository.findByUserAndId(user,recordId);
@@ -193,12 +198,6 @@ public class RecordService {
     }
 
     public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
-        MealResponseVO mealResponse = new MealResponseVO();
-        List<MealDetailResponseVO> mealDetailResponse = new ArrayList<>();
-
-        mealResponse.setMealId(meal.getId());
-        mealResponse.setTimeTag(requestRecord.getTimeTag());
-        mealResponse.setUserId(requestRecord.getUserId());
 
         meal.setTimeTag(requestRecord.getTimeTag());
         for(MealDetailUpdateVO detail : requestRecord.getMealDetails()){
@@ -214,20 +213,15 @@ public class RecordService {
             updateTarget.setBloodSugar(detail.getBloodSugar());
             updateTarget.setFoodId(detail.getFoodId());
 
-            MealDetailResponseVO detailResponse = MealDetailResponseVO.builder()
-                    .mealDetailId(updateTarget.getId()).calories(updateTarget.getCalorie())
-                    .imageUrl(updateTarget.getImageUrl()).bloodSugar(updateTarget.getBloodSugar())
-                    .foodName(updateTarget.getFoodName()).build();
-
-            mealDetailResponse.add(detailResponse);
-
             mealDetailRepository.save(updateTarget);
         }
 
-        mealResponse.setMealDetails(mealDetailResponse);
+        Meal saved = mealRepository.save(meal);
 
-        mealRepository.save(meal);
+        return mealConvert(saved);
+    }
 
-        return mealResponse;
+    public List<Record> findAllByUser(User user) {
+        return recordRepository.findAllByUser(user);
     }
 }

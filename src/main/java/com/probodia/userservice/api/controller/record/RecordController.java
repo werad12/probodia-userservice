@@ -4,12 +4,14 @@ package com.probodia.userservice.api.controller.record;
 import com.probodia.userservice.api.entity.record.BPressure;
 import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.record.Meal;
+import com.probodia.userservice.api.entity.record.Record;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.RecordService;
 import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.api.vo.*;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -178,6 +182,45 @@ public class RecordController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Object>> getAllRecords(@RequestBody @ApiParam(value = "음식 ID", required = true,example = "123123")
+                                                          @NotNull(message = "User Id cannot be null")Long userId){
+        //user 찾기
+        User user = getUser(userId);
+
+        //user에 따른 레코드 찾기
+        List<Record> records = recordService.findAllByUser(user);
+        List<Object> ret = new ArrayList<>();
+
+
+        //record 매핑
+        for(Record record : records){
+            switch (record.getType()){
+                case "SUGAR":
+                    ret.add(recordService.bSugarConvert(recordService.findBSugarByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new)));
+                    break;
+
+                case "PRESSURE":
+                    ret.add(recordService.bPressureConvert(recordService.findBPressureByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new)));
+                    break;
+
+                case "MEAL":
+                    Meal meal = recordService.findMealByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new);
+                    log.info("MEAL ID : {}",meal.getId());
+                    log.info("MEAL DETAIL : {}",meal.getMealDetails().get(0).getId());
+                    ret.add(recordService.mealConvert(meal));
+                    break;
+                case "MEDICINE":
+                    //구현 필요
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
+        return new ResponseEntity<>(ret,HttpStatus.OK);
+    }
 
 
     private User getUser(Long userId){

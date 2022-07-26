@@ -35,4 +35,7 @@ public class Record extends BaseTime {
     @Size(max = 10)
     private String timeTag;
 
+    @Column(name = "RTYPE",insertable = false,updatable = false)
+    protected String type;
+
 }

@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.entity.record;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,7 @@ public class MealDetail {
     @ManyToOne
     @JoinColumn(name = "MEAL_ID", insertable = false,
     updatable = false)
+    @JsonIgnore
     private Meal meal;
 
 }
