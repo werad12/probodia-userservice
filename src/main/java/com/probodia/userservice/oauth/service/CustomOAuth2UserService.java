@@ -60,7 +60,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(savedUser, user.getAttributes());
     }
 
-    private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+    public User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
         User user = new User(
                 userInfo.getId(),

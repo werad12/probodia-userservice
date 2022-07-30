@@ -1,34 +1,41 @@
 package com.probodia.userservice.api.controller.auth;
 
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
+import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
+import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.common.ApiResponse;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.oauth.entity.UserPrincipal;
+import com.probodia.userservice.oauth.service.CustomOAuth2UserService;
 import com.probodia.userservice.oauth.token.AuthToken;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import com.probodia.userservice.utils.CookieUtil;
 import com.probodia.userservice.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Map;
 
 import static com.probodia.userservice.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
@@ -37,30 +44,56 @@ public class AuthController {
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final UserService userService;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login")
+    @ApiOperation(value = "로그인 / 회원가입", notes = "로그인 또는 회원가입")
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody AuthReqModel authReqModel
     ) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authReqModel.getId(),
-                        authReqModel.getPassword()
-                )
-        );
 
-        String userId = authReqModel.getId();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("AUTH REQ MODEL : {}",authReqModel);
 
+        //kakao access token을 가지고 authentication을 진행한다.
+        //200 응답 + id 값이 같은지
+
+        Map<String, String> authenticate = userService.authenticate(authReqModel);
+        if(!authenticate.get("status").equals(HttpStatus.OK.value()))
+            return ApiResponse.invalidAccessToken();
+
+        String userId = authenticate.get("id");
+
+        if(!userId.equals(authReqModel.getId()))
+            return ApiResponse.invalidAccessToken();
+
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        authReqModel.getId(),
+//                        authReqModel.getPassword()
+//                )
+//        );
+
+
+        //SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        //userId로 찾아서 user가 존재하지 않으면 user를 생성한다.
+        User user = userService.getUser(userId);
+        if(user==null){
+            Map<String,String> userInfo = userService.getUserInfo(authReqModel);
+
+            user = userService.createUser(userInfo);
+        }
+
+        //access 토큰을 생성한다.
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userId,
-                ((UserPrincipal) authentication.getPrincipal()).getRoleType().getCode(),
+                RoleType.USER.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
@@ -85,16 +118,25 @@ public class AuthController {
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        //CookieUtil.deleteCookie(request,response,USER_ID);
+        CookieUtil.deleteCookie(request,response,USER_ID);
 
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
         CookieUtil.addCookie(response,USER_ID,userId,cookieMaxAge);
-        CookieUtil.addCookie(response,USER_TOKEN,accessToken.getToken(),cookieMaxAge);
+        //CookieUtil.addCookie(response,USER_TOKEN,accessToken.getToken(),cookieMaxAge);
 
         return ApiResponse.success("token", accessToken.getToken());
     }
 
-    @GetMapping("/refresh")
+
+    /**
+     *
+     * @param server refresh token이 필요하다.
+     * @param response
+     * @return
+     */
+    @GetMapping("/api/auth/refresh")
+    @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
+            " 리프레시 토큰은 여기서 refresh_token의 이름으로 쿠키에 담는다.")
     public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);

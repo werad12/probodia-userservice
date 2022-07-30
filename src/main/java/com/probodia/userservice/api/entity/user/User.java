@@ -43,7 +43,7 @@ public class User extends BaseTime {
     @Size(max = 128)
     private String password;
 
-    @Column(name = "EMAIL", length = 512, unique = true)
+    @Column(name = "EMAIL", length = 512)
     @NotNull
     @Size(max = 512)
     private String email;

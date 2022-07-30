@@ -48,6 +48,7 @@ cors:
   allowed-headers: '*'
   max-age: 3600
 
+tokenVerifyUri: https://kapi.kakao.com/v1/user/access_token_info
 
 app:
   auth:
