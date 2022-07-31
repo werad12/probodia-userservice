@@ -4,12 +4,11 @@ package com.probodia.userservice.api.controller.record;
 import com.probodia.userservice.api.entity.record.BPressure;
 import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.record.Meal;
-import com.probodia.userservice.api.entity.record.Record;
+import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.RecordService;
 import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.api.vo.*;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -189,12 +188,12 @@ public class RecordController {
         User user = getUser(userId);
 
         //user에 따른 레코드 찾기
-        List<Record> records = recordService.findAllByUser(user);
+        List<Records> records = recordService.findAllByUser(user);
         List<Object> ret = new ArrayList<>();
 
 
         //record 매핑
-        for(Record record : records){
+        for(Records record : records){
             switch (record.getType()){
                 case "SUGAR":
                     ret.add(recordService.bSugarConvert(recordService.findBSugarByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new)));

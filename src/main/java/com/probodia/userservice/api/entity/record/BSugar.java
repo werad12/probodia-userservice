@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @DiscriminatorValue("SUGAR")
 @Table(name = "BSUGAR")
-public class BSugar extends Record{
+public class BSugar extends Records {
 
     @NotNull
     @Column(name = "BLOOD_SUGAR")

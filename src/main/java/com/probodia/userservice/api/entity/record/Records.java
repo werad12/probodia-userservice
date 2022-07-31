@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "RTYPE")
 @Table(name = "RECORD")
-public class Record extends BaseTime {
+public class Records extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

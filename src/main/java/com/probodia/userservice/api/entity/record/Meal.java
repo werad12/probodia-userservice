@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("MEAL")
 @Table(name = "MEAL")
-public class Meal extends Record{
+public class Meal extends Records {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

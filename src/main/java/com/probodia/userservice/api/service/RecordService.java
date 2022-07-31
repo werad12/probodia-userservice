@@ -3,7 +3,6 @@ package com.probodia.userservice.api.service;
 import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
-import com.probodia.userservice.api.repository.user.UserRepository;
 import com.probodia.userservice.api.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -221,7 +220,7 @@ public class RecordService {
         return mealConvert(saved);
     }
 
-    public List<Record> findAllByUser(User user) {
+    public List<Records> findAllByUser(User user) {
         return recordRepository.findAllByUser(user);
     }
 }
