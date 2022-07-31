@@ -43,7 +43,7 @@ pipeline {
                                                             sourceFiles: "",
                                                             removePrefix: "",
                                                             remoteDirectory: "",
-                                                            execCommand: "sh deploy.sh"
+                                                            execCommand: "sh deploy-user.sh"
                                                     )
                                             ]
                                     )

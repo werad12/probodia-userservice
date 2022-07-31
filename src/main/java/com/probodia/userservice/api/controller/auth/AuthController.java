@@ -128,12 +128,7 @@ public class AuthController {
     }
 
 
-    /**
-     *
-     * @param server refresh token이 필요하다.
-     * @param response
-     * @return
-     */
+
     @GetMapping("/api/auth/refresh")
     @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
             " 리프레시 토큰은 여기서 refresh_token의 이름으로 쿠키에 담는다.")
