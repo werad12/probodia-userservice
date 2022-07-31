@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/dev
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: tjwlsdl1
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBA
+    tokenExpiry: 604800000
+    refreshTokenExpiry: 604800000
+
+logging:
+  level:
+    root: info
+server:
+  port: 0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
