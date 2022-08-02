@@ -3,6 +3,8 @@ package com.probodia.userservice.api.service;
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
+import com.probodia.userservice.api.vo.UserInfoRequestVO;
+import com.probodia.userservice.api.vo.UserInfoVO;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.oauth.service.CustomOAuth2UserService;
@@ -84,5 +86,38 @@ public class UserService {
                 RoleType.USER);
 
         return userRepository.saveAndFlush(user);
+    }
+
+    public UserInfoVO getUserInfo(User user){
+        return UserInfoVO.builder().userId(user.getUserId())
+                .height(user.getHeight()).sex(user.getSex())
+                .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
+                .build();
+    }
+
+    public UserInfoVO updateUserInfo(UserInfoRequestVO request, User user) {
+
+        if(request.getHeight()!=null){
+            user.setHeight(request.getHeight());
+        }
+
+        if(request.getSex()!=null){
+            user.setSex(request.getSex());
+        }
+
+        if(request.getWeight()!=null){
+            user.setWeight(request.getWeight());
+        }
+
+        if(request.getProfileImageUrl()!=null){
+            user.setProfileImageUrl(request.getProfileImageUrl());
+        }
+
+        userRepository.save(user);
+
+        return UserInfoVO.builder().userId(user.getUserId())
+                .height(user.getHeight()).sex(user.getSex())
+                .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
+                .build();
     }
 }

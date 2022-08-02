@@ -27,7 +27,7 @@ logging:
   level:
     root: info
 server:
-  port: 8080
+  port: 0
 
 eureka:
   client:

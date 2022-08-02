@@ -182,7 +182,8 @@ public class RecordController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Object>> getAllRecords(@RequestBody @ApiParam(value = "음식 ID", required = true,example = "123123")
+    @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
+    public ResponseEntity<List<Object>> getAllRecords(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
                                                           @NotNull(message = "User Id cannot be null")Long userId){
         //user 찾기
         User user = getUser(userId);
