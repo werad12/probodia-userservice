@@ -20,15 +20,17 @@ public class RecordService {
     private MealRepository mealRepository;
     private MealDetailRepository mealDetailRepository;
     private RecordRepository recordRepository;
+    private MedicineRepository medicineRepository;
 
     @Autowired
-    public RecordService(BPressureRepository bPressureRepository, BSugarRepository bSugarRepository,
-                         MealRepository mealRepository, MealDetailRepository mealDetailRepository, RecordRepository recordRepository) {
+    public RecordService(BPressureRepository bPressureRepository, BSugarRepository bSugarRepository, MealRepository mealRepository,
+                         MealDetailRepository mealDetailRepository, RecordRepository recordRepository, MedicineRepository medicineRepository) {
         this.bPressureRepository = bPressureRepository;
         this.bSugarRepository = bSugarRepository;
         this.mealRepository = mealRepository;
         this.mealDetailRepository = mealDetailRepository;
         this.recordRepository = recordRepository;
+        this.medicineRepository = medicineRepository;
     }
 
     public BSugarResponse saveSugar(String timeTag, Integer bloodSugar, User user) {
@@ -220,7 +222,53 @@ public class RecordService {
         return mealConvert(saved);
     }
 
+
+
+
     public List<Records> findAllByUser(User user) {
         return recordRepository.findAllByUser(user);
+    }
+
+    public MedicineResponseVO saveMedicine(MedicineVO requestRecord, User user) {
+
+        Medicine medicine = new Medicine();
+        medicine.setUser(user);
+        medicine.setTimeTag(requestRecord.getTimeTag());
+        if(requestRecord.getMedicineId()!=null)
+            medicine.setMedicineId(requestRecord.getMedicineId());
+
+        medicine.setMedicineCnt(requestRecord.getMedicineCnt());
+        medicine.setMedicineName(requestRecord.getMedicineName());
+        Medicine saved = medicineRepository.save(medicine);
+
+
+        return convertMedicine(saved);
+    }
+
+    public MedicineResponseVO convertMedicine(Medicine saved){
+        return MedicineResponseVO.builder().medicineId(saved.getMedicineId())
+                .recordId(saved.getId()).medicineCnt(saved.getMedicineCnt())
+                .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag())
+                .userId(saved.getUser().getUserId()).build();
+    }
+
+    public Optional<Medicine> findMedicineByUserAndId(User user, Long recordId) {
+        return medicineRepository.findByUserAndId(user,recordId);
+    }
+
+    public Long deleteMedicine(Medicine medicine) {
+        medicineRepository.delete(medicine);
+        return medicine.getId();
+    }
+
+    public MedicineResponseVO updateMedicine(Medicine medicine, MedicineUpdateVO requestRecord) {
+        if(requestRecord.getMedicineId()!=null)
+            medicine.setMedicineId(requestRecord.getMedicineId());
+        medicine.setMedicineCnt(requestRecord.getMedicineCnt());
+        medicine.setMedicineName(requestRecord.getMedicineName());
+
+        Medicine saved = medicineRepository.save(medicine);
+
+        return convertMedicine(saved);
     }
 }

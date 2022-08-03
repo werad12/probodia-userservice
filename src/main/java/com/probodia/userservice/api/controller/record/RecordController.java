@@ -1,10 +1,7 @@
 package com.probodia.userservice.api.controller.record;
 
 
-import com.probodia.userservice.api.entity.record.BPressure;
-import com.probodia.userservice.api.entity.record.BSugar;
-import com.probodia.userservice.api.entity.record.Meal;
-import com.probodia.userservice.api.entity.record.Records;
+import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.RecordService;
 import com.probodia.userservice.api.service.UserService;
@@ -180,6 +177,52 @@ public class RecordController {
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+    @PostMapping("/medicine")
+    @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
+    public ResponseEntity<MedicineResponseVO> saveMedicineRecord(@RequestBody MedicineVO requestRecord){
+
+        //user 찾기
+        User user = getUser(requestRecord.getUserId());
+
+        //투약 기록 저장
+        MedicineResponseVO saved = recordService.saveMedicine(requestRecord, user);
+
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/medicine")
+    @ApiOperation(value = "투약 기록 삭제", notes = "투약 기록을 삭제한다.")
+    public ResponseEntity<Long> deleteMedicineRecord(@RequestBody RecordDeleteRequest request){
+
+        //user 찾기
+        User user = getUser(request.getUserId());
+
+
+        //record 찾기
+        Optional<Medicine> deleteRecord = recordService.findMedicineByUserAndId(user, request.getRecordId());
+        if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
+
+        return new ResponseEntity<>(recordService.deleteMedicine(deleteRecord.get()),HttpStatus.OK);
+    }
+
+    @PutMapping("/medicine")
+    @ApiOperation(value = "투약 기록 수정", notes = "투약 기록을 수정한다.")
+    public ResponseEntity<MedicineResponseVO> updateBSugarRecord(@RequestBody MedicineUpdateVO requestRecord){
+
+        //user 찾기
+        User user = getUser(requestRecord.getUserId());
+
+        //record 찾기
+        Optional<Medicine> updateRecord = recordService.findMedicineByUserAndId(user, requestRecord.getRecordId());
+        if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
+
+        //혈당 기록 수정
+        MedicineResponseVO result = recordService.updateMedicine(updateRecord.get(), requestRecord);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/getAll")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
