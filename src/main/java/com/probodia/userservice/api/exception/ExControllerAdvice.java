@@ -21,9 +21,14 @@ public class ExControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
-    public ErrorResult NotFoundExHandle(NoSuchElementException e) {
+    public ErrorResult notFoundExHandle(NoSuchElementException e) {
         return new ErrorResult("Not found Element", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ErrorResult unAuthorizedTokenHandle(UnAuthorizedException e){
+        return new ErrorResult("Unauthorized", e.getMessage());
+    }
 
 }

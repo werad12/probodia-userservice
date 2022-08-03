@@ -3,6 +3,7 @@ package com.probodia.userservice.api.controller.auth;
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.entity.user.UserRefreshToken;
+import com.probodia.userservice.api.exception.UnAuthorizedException;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
 import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.common.ApiResponse;
@@ -20,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.Map;
 
@@ -51,7 +54,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인 / 회원가입", notes = "로그인 또는 회원가입")
-    public ApiResponse login(
+    public ResponseEntity<String> login(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody AuthReqModel authReqModel
@@ -64,12 +67,12 @@ public class AuthController {
 
         Map<String, String> authenticate = userService.authenticate(authReqModel);
         if(!authenticate.get("status").equals(HttpStatus.OK.value()))
-            return ApiResponse.invalidAccessToken();
+            throw new UnAuthorizedException("Invalid status from kakao auth server.");
 
         String userId = authenticate.get("id");
 
         if(!userId.equals(authReqModel.getId()))
-            return ApiResponse.invalidAccessToken();
+            throw new UnAuthorizedException("Invalid User Id");
 
 //        Authentication authentication = authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(
@@ -124,7 +127,9 @@ public class AuthController {
         CookieUtil.addCookie(response,USER_ID,userId,cookieMaxAge);
         //CookieUtil.addCookie(response,USER_TOKEN,accessToken.getToken(),cookieMaxAge);
 
-        return ApiResponse.success("token", accessToken.getToken());
+        String token = accessToken.getToken();
+
+        return new ResponseEntity<>(token,HttpStatus.OK);
     }
 
 
@@ -132,18 +137,18 @@ public class AuthController {
     @GetMapping("/api/auth/refresh")
     @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
             " 리프레시 토큰은 여기서 refresh_token의 이름으로 쿠키에 담는다.")
-    public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
         if (!authToken.validateForExpired()) {
-            return ApiResponse.invalidAccessToken();
+            throw new UnAuthorizedException("Not expired yet.");
         }
 
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
         if (claims == null) {
-            return ApiResponse.notExpiredTokenYet();
+            throw new UnAuthorizedException("Invalid status from kakao auth server.");
         }
 
         String userId = claims.getSubject();
@@ -157,13 +162,13 @@ public class AuthController {
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
         if (!authRefreshToken.validate()) {
-            return ApiResponse.invalidRefreshToken();
+            throw new UnAuthorizedException("Invalid refresh token.");
         }
 
         // userId refresh token 으로 DB 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
-            return ApiResponse.invalidRefreshToken();
+            throw new UnAuthorizedException("Invalid refresh token.");
         }
 
         Date now = new Date();
@@ -193,6 +198,6 @@ public class AuthController {
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ApiResponse.success("token", newAccessToken.getToken());
+        return new ResponseEntity<>(newAccessToken.getToken(),HttpStatus.OK);
     }
 }
