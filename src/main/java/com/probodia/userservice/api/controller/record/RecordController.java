@@ -6,12 +6,16 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.RecordService;
 import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.api.vo.*;
+import com.probodia.userservice.utils.PageInfoUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.common.reflection.XMember;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -221,48 +225,43 @@ public class RecordController {
     }
 
 
-    @GetMapping("/getAll")
-    @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
-    public ResponseEntity<List<RecordLookUpVO>> getAllRecords(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
-                                                          @NotNull(message = "User Id cannot be null")Long userId){
+    @GetMapping("/getAll/{page}/{size}")
+    @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
+    public ResponseEntity<PagingLookUpVO> getAllRecords(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
+                                                          @NotNull(message = "User Id cannot be null")Long userId,
+                                                              @PathVariable(name = "page") @ApiParam(value = "페이지 번호", required = true,example = "12")
+                                                              @NotNull(message = "Page number cannot be null")Integer page,
+                                                              @PathVariable(name = "size") @ApiParam(value = "한 페이지의 사이즈", required = true,example = "123")
+                                                                  @NotNull(message = "Paging size cannot be null")Integer size
+                                                              ){
         //user 찾기
         User user = getUser(userId);
 
         //user에 따른 레코드 찾기
-        List<Records> records = recordService.findAllByUser(user);
-        List<RecordLookUpVO> ret = new ArrayList<>();
+        Page<Records> pageRecord = recordService.findAllByUser(user,page - 1,size);
+        PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
 
-        //record 매핑
-        for(Records record : records){
-            RecordLookUpVO col = new RecordLookUpVO();
-            switch (record.getType()){
-                case "SUGAR":
-                    col.setType("SUGAR");
-                    col.setRecord(recordService.bSugarConvert((BSugar) record));
-                    break;
+        List<Records> records = pageRecord.getContent();
+        List<RecordLookUpVO> retValue = recordService.getRecordList(records);
 
-                case "PRESSURE":
-                    col.setType("PRESSURE");
-                    col.setRecord(recordService.bPressureConvert((BPressure) record));
-                    break;
+        return new ResponseEntity<>(new PagingLookUpVO(retValue,pageInfo),HttpStatus.OK);
+    }
 
-                case "MEAL":
-                    col.setType("MEAL");
-                    col.setRecord(recordService.mealConvert((Meal) record));
-                    break;
-                case "MEDICINE":
-                    col.setType("MEDICINE");
-                    col.setRecord(recordService.convertMedicine((Medicine) record));
-                    break;
-                default:
-                    break;
-            }
+    @GetMapping("/getAllFiltered")
+    @ApiOperation(value = "user Id로 일부 기록을 가져온다.", notes = "일부 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
+    public ResponseEntity<PagingLookUpVO> getFilteredRecord(@RequestBody PagingFilterRequestVO request){
 
-            ret.add(col);
+        //user 찾기
+        User user = getUser(request.getUserId());
 
-        }
+        //user에 따른 레코드 찾기
+        Page<Records> pageRecord = recordService.findAllByUser(user,request.getPage() - 1,request.getSize(),request.getFilterType());
+        PageInfoUtil pageInfo = new PageInfoUtil(request.getPage(),request.getSize(),(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
 
-        return new ResponseEntity<>(ret,HttpStatus.OK);
+        List<Records> records = pageRecord.getContent();
+        List<RecordLookUpVO> retValue = recordService.getRecordList(records);
+
+        return new ResponseEntity<>(new PagingLookUpVO(retValue,pageInfo),HttpStatus.OK);
     }
 
 

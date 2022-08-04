@@ -5,6 +5,8 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
 import com.probodia.userservice.api.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -225,9 +227,16 @@ public class RecordService {
 
 
 
-    public List<Records> findAllByUser(User user) {
-        return recordRepository.findAllByUser(user);
+    public Page<Records> findAllByUser(User user, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return recordRepository.findAllByUserOrderByCreatedDateDesc(pageRequest,user);
     }
+
+    public Page<Records> findAllByUser(User user, int page, int size, List<String> filterType) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return recordRepository.findAllByUserAndTypeInOrderByCreatedDateDesc(pageRequest,user,filterType);
+    }
+
 
     public MedicineResponseVO saveMedicine(MedicineVO requestRecord, User user) {
 
@@ -270,5 +279,40 @@ public class RecordService {
         Medicine saved = medicineRepository.save(medicine);
 
         return convertMedicine(saved);
+    }
+
+    public List<RecordLookUpVO> getRecordList(List<Records> records){
+        List<RecordLookUpVO> retValue = new ArrayList<>();
+
+        //record 매핑
+        for(Records record : records){
+            RecordLookUpVO col = new RecordLookUpVO();
+            switch (record.getType()){
+                case "SUGAR":
+                    col.setType("SUGAR");
+                    col.setRecord(bSugarConvert((BSugar) record));
+                    break;
+
+                case "PRESSURE":
+                    col.setType("PRESSURE");
+                    col.setRecord(bPressureConvert((BPressure) record));
+                    break;
+
+                case "MEAL":
+                    col.setType("MEAL");
+                    col.setRecord(mealConvert((Meal) record));
+                    break;
+                case "MEDICINE":
+                    col.setType("MEDICINE");
+                    col.setRecord(convertMedicine((Medicine) record));
+                    break;
+                default:
+                    break;
+            }
+
+            retValue.add(col);
+
+        }
+        return retValue;
     }
 }
