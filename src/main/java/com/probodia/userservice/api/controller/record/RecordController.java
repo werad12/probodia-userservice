@@ -16,10 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/record")
@@ -226,40 +223,43 @@ public class RecordController {
 
     @GetMapping("/getAll")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
-    public ResponseEntity<List<Object>> getAllRecords(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
+    public ResponseEntity<List<RecordLookUpVO>> getAllRecords(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
                                                           @NotNull(message = "User Id cannot be null")Long userId){
         //user 찾기
         User user = getUser(userId);
 
         //user에 따른 레코드 찾기
         List<Records> records = recordService.findAllByUser(user);
-        List<Object> ret = new ArrayList<>();
-
+        List<RecordLookUpVO> ret = new ArrayList<>();
 
         //record 매핑
         for(Records record : records){
+            RecordLookUpVO col = new RecordLookUpVO();
             switch (record.getType()){
                 case "SUGAR":
-                    ret.add(recordService.bSugarConvert(recordService.findBSugarByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new)));
+                    col.setType("SUGAR");
+                    col.setRecord(recordService.bSugarConvert((BSugar) record));
                     break;
 
                 case "PRESSURE":
-                    ret.add(recordService.bPressureConvert(recordService.findBPressureByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new)));
+                    col.setType("PRESSURE");
+                    col.setRecord(recordService.bPressureConvert((BPressure) record));
                     break;
 
                 case "MEAL":
-                    Meal meal = recordService.findMealByUserAndId(user, record.getId()).orElseThrow(NoSuchElementException::new);
-                    log.info("MEAL ID : {}",meal.getId());
-                    log.info("MEAL DETAIL : {}",meal.getMealDetails().get(0).getId());
-                    ret.add(recordService.mealConvert(meal));
+                    col.setType("MEAL");
+                    col.setRecord(recordService.mealConvert((Meal) record));
                     break;
                 case "MEDICINE":
-                    //구현 필요
+                    col.setType("MEDICINE");
+                    col.setRecord(recordService.convertMedicine((Medicine) record));
                     break;
                 default:
                     break;
-
             }
+
+            ret.add(col);
+
         }
 
         return new ResponseEntity<>(ret,HttpStatus.OK);
