@@ -9,6 +9,7 @@ import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
@@ -43,6 +45,7 @@ public class UserService {
         String statusCode = String.valueOf(response.getStatusCodeValue());
 
         ret.put("status",statusCode);
+        log.info("Kakao return status : {}",statusCode);
         if(statusCode.equals("200")){
             ret.put("id",String.valueOf((Long)response.getBody().get("id")));
         }

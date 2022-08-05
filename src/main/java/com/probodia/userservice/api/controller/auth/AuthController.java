@@ -66,7 +66,7 @@ public class AuthController {
         //200 응답 + id 값이 같은지
 
         Map<String, String> authenticate = userService.authenticate(authReqModel);
-        if(!authenticate.get("status").equals(HttpStatus.OK.value()))
+        if(Integer.parseInt(authenticate.get("status"))!=(HttpStatus.OK.value()))
             throw new UnAuthorizedException("Invalid status from kakao auth server.");
 
         String userId = authenticate.get("id");
