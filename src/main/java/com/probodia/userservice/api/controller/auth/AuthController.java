@@ -6,6 +6,7 @@ import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.exception.UnAuthorizedException;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
 import com.probodia.userservice.api.service.UserService;
+import com.probodia.userservice.api.vo.LoginResponseVO;
 import com.probodia.userservice.common.ApiResponse;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.oauth.entity.RoleType;
@@ -54,7 +55,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인 / 회원가입", notes = "로그인 또는 회원가입")
-    public ResponseEntity<String> login(
+    public ResponseEntity<LoginResponseVO> login(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody AuthReqModel authReqModel
@@ -120,24 +121,35 @@ public class AuthController {
          }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.deleteCookie(request,response,USER_ID);
+        //CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+        //CookieUtil.deleteCookie(request,response,USER_ID);
 
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-        CookieUtil.addCookie(response,USER_ID,userId,cookieMaxAge);
+        //CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        //CookieUtil.addCookie(response,USER_ID,userId,cookieMaxAge);
         //CookieUtil.addCookie(response,USER_TOKEN,accessToken.getToken(),cookieMaxAge);
 
         String token = accessToken.getToken();
+        String returnRefreshToken = refreshToken.getToken();
+        LoginResponseVO ret = new LoginResponseVO();
+        ret.setApiAccessToken(token);
+        ret.setApiRefreshToken(returnRefreshToken);
 
-        return new ResponseEntity<>(token,HttpStatus.OK);
+
+        return new ResponseEntity<>(ret,HttpStatus.OK);
     }
 
 
 
     @GetMapping("/api/auth/refresh")
     @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
-            " 리프레시 토큰은 여기서 refresh_token의 이름으로 쿠키에 담는다.")
+            " 리프레시 토큰은 여기서 RefreshToken의 이름으로 헤더에 담는다.")
     public ResponseEntity<String> refreshToken (HttpServletRequest request, HttpServletResponse response) {
+
+        //String refreshToken1 = HeaderUtil.getHeaderRefreshToken(request);
+
+        //log.info("refresh token from header : {}",refreshToken1);
+
+
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
@@ -155,9 +167,9 @@ public class AuthController {
         RoleType roleType = RoleType.of(claims.get("role", String.class));
 
         // refresh token
-        String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
-                .map(Cookie::getValue)
-                .orElse((null));
+        String refreshToken = HeaderUtil.getHeaderRefreshToken(request);
+
+        log.info("refresh token from header : {}",refreshToken);
 
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
