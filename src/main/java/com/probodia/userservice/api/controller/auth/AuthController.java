@@ -140,7 +140,7 @@ public class AuthController {
 
 
 
-    @GetMapping("/api/auth/refresh")
+    @GetMapping("/auth/refresh")
     @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
             " 리프레시 토큰은 여기서 RefreshToken의 이름으로 헤더에 담는다.")
     public ResponseEntity<String> refreshToken (HttpServletRequest request, HttpServletResponse response) {

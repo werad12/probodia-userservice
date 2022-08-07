@@ -19,9 +19,9 @@ cors:
 
 app:
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBA
-    tokenExpiry: 604800000
-    refreshTokenExpiry: 604800000
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBQ
+    tokenExpiry: 8640000000000
+    refreshTokenExpiry: 8640000000000
 
 logging:
   level:
