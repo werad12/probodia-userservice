@@ -69,6 +69,8 @@ public class UserService {
         String name = properties.get("nickname");
         String imageUrl = properties.get("thumbnail_image");
 
+        log.info("[UserInfo] : username = {}",name);
+
         Map<String,String> ret = new HashMap<>();
         ret.put("id",id);
         ret.put("name",name);
@@ -78,6 +80,8 @@ public class UserService {
     }
 
     public User createUser(Map<String, String> userInfo) {
+
+        log.info("[User] : username = {}",userInfo.get("name"));
 
         User user = new User(
                 userInfo.get("id"),

@@ -11,6 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 @EnableConfigurationProperties({
         CorsProperties.class,
@@ -23,7 +26,11 @@ public class UserserviceApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserserviceApplication.class, args);
     }
-
+    @PostConstruct
+    void init() {
+        //TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
     @Bean
     public RestTemplate httpRestTemplate(){
         return new RestTemplate(new HttpComponentsClientHttpRequestFactory());
