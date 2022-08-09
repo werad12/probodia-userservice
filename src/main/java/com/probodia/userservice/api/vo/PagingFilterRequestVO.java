@@ -19,9 +19,6 @@ import java.util.List;
 @Data
 public class PagingFilterRequestVO {
 
-    @ApiParam(value = "유저 ID", required = true,example = "123123")
-    @NotNull(message = "User Id cannot be null")
-    String userId;
 
     @ApiParam(value = "필터링할 타입들", required = true,example = "MEAL")
     @NotNull(message = "Filter type cannot be null")

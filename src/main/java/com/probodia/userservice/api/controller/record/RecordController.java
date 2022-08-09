@@ -20,6 +20,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -45,7 +46,7 @@ public class RecordController {
     @PostMapping("/sugar")
     @ApiOperation(value = "혈당 기록 저장", notes = "혈당 기록을 저장한다.")
     public ResponseEntity<BSugarResponse> saveBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                           @RequestBody BSugarVO requestRecord){
+                                                           @Valid @RequestBody BSugarVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -58,7 +59,7 @@ public class RecordController {
     @PostMapping("/pressure")
     @ApiOperation(value = "혈압 기록 저장", notes = "혈압 기록을 저장한다.")
     public ResponseEntity<BPressureResponse> saveBPressureRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @RequestBody BPressureVO requestRecord){
+                                                                 @Valid @RequestBody BPressureVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -71,7 +72,7 @@ public class RecordController {
     @PostMapping("/meal")
     @ApiOperation(value = "음식 기록 추가", notes = "음식 기록을 추가한다.")
     public ResponseEntity<MealResponseVO> saveMeal(@RequestHeader(value = "Authorization")String token,
-                                                   @RequestBody MealVO requestRecord){
+                                                   @Valid @RequestBody MealVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -88,7 +89,7 @@ public class RecordController {
     @PostMapping("/medicine")
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
     public ResponseEntity<MedicineResponseVO> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @RequestBody MedicineVO requestRecord){
+                                                                 @Valid @RequestBody MedicineVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -102,7 +103,7 @@ public class RecordController {
     @PutMapping("/sugar")
     @ApiOperation(value = "혈당 기록 수정", notes = "혈당 기록을 수정한다.")
     public ResponseEntity<BSugarResponse> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                             @RequestBody BSugarUpdateVO requestRecord){
+                                                             @Valid @RequestBody BSugarUpdateVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -119,7 +120,7 @@ public class RecordController {
     @PutMapping("/pressure")
     @ApiOperation(value = "혈압 기록 수정", notes = "혈압 기록을 수정한다.")
     public ResponseEntity<BPressureResponse> updateBPressureRecord(@RequestHeader(value = "Authorization")String token,
-                                                                   @RequestBody BPressureUpdateVO requestRecord){
+                                                                   @Valid @RequestBody BPressureUpdateVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -135,7 +136,7 @@ public class RecordController {
     @PutMapping("/meal")
     @ApiOperation(value = "음식 기록 수정", notes = "음식 기록을 수정한다.")
     public ResponseEntity<MealResponseVO> updateMeal(@RequestHeader(value = "Authorization")String token,
-                                                     @RequestBody MealUpdateVO requestRecord){
+                                                     @Valid @RequestBody MealUpdateVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -151,7 +152,7 @@ public class RecordController {
     @PutMapping("/medicine")
     @ApiOperation(value = "투약 기록 수정", notes = "투약 기록을 수정한다.")
     public ResponseEntity<MedicineResponseVO> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @RequestBody MedicineUpdateVO requestRecord){
+                                                                 @Valid @RequestBody MedicineUpdateVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -168,7 +169,7 @@ public class RecordController {
     @DeleteMapping("/sugar")
     @ApiOperation(value = "혈당 기록 삭제", notes = "혈당 기록을 삭제한다.")
     public ResponseEntity<Long> deleteBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                   @RequestBody RecordDeleteRequest request){
+                                                   @Valid @RequestBody RecordDeleteRequest request){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -183,7 +184,7 @@ public class RecordController {
     @DeleteMapping("/pressure")
     @ApiOperation(value = "혈압 기록 삭제", notes = "혈압 기록을 삭제한다.")
     public ResponseEntity<Long> deleteBPressureRecord(@RequestHeader(value = "Authorization")String token,
-                                                      @RequestBody RecordDeleteRequest request){
+                                                      @Valid @RequestBody RecordDeleteRequest request){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -199,7 +200,7 @@ public class RecordController {
     @DeleteMapping("/meal")
     @ApiOperation(value = "음식 기록 삭제", notes = "음식 기록을 삭제한다.")
     public ResponseEntity<Long> deleteMeal(@RequestHeader(value = "Authorization")String token,
-                                           @RequestBody RecordDeleteRequest request){
+                                           @Valid @RequestBody RecordDeleteRequest request){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -218,7 +219,7 @@ public class RecordController {
     @DeleteMapping("/medicine")
     @ApiOperation(value = "투약 기록 삭제", notes = "투약 기록을 삭제한다.")
     public ResponseEntity<Long> deleteMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                     @RequestBody RecordDeleteRequest request){
+                                                     @Valid @RequestBody RecordDeleteRequest request){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -256,7 +257,7 @@ public class RecordController {
     @GetMapping("/getAllFiltered")
     @ApiOperation(value = "user Id로 일부 기록을 가져온다.", notes = "일부 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
     public ResponseEntity<PagingLookUpVO> getFilteredRecord(@RequestHeader(value = "Authorization")String token,
-                                                            @RequestBody PagingFilterRequestVO request){
+                                                            @Valid @RequestBody PagingFilterRequestVO request){
 
         //user 찾기
         User user = getUserByToken(token);
