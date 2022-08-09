@@ -64,7 +64,7 @@ public class RecordController {
         //user 찾기
         User user = getUserByToken(token);
         //혈압 기록 저장
-        BPressureResponse saved = recordService.savePressure(requestRecord.getTimeTag(),requestRecord.getBloodPressure(), user);
+        BPressureResponse saved = recordService.savePressure(requestRecord, user);
 
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }

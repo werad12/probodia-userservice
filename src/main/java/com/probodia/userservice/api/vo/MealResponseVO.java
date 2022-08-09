@@ -17,7 +17,7 @@ import java.util.List;
 public class MealResponseVO {
 
     @ApiModelProperty(value = "음식 ID", required = true,example = "123123")
-    private Long mealId;
+    private Long recordId;
 
     @ApiModelProperty(value = "시간 태그", required = true,example = "아침")
     private String timeTag;

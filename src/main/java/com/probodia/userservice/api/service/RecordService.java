@@ -54,12 +54,14 @@ public class RecordService {
                         .build();
     }
 
-    public BPressureResponse savePressure(String timeTag, Integer bloodPressure, User user) {
+    public BPressureResponse savePressure(BPressureVO request, User user) {
 
         BPressure bPressure = new BPressure();
         bPressure.setUser(user);
-        bPressure.setTimeTag(timeTag);
-        bPressure.setBloodPressure(bloodPressure);
+        bPressure.setTimeTag(request.getTimeTag());
+        bPressure.setMaxBloodPressure(request.getMaxBloodPressure());
+        bPressure.setMinBloodPressure(request.getMinBloodPressure());
+        bPressure.setHeartBeat(request.getHeartBeat());
         BPressure saved = bPressureRepository.save(bPressure);
 
         return bPressureConvert(saved);
@@ -67,7 +69,10 @@ public class RecordService {
 
     public BPressureResponse bPressureConvert(BPressure bPressure){
         return
-                BPressureResponse.builder().bloodPressure(bPressure.getBloodPressure())
+                BPressureResponse.builder()
+                        .heartBeat(bPressure.getHeartBeat())
+                        .maxBloodPressure(bPressure.getMaxBloodPressure())
+                        .minBloodPressure(bPressure.getMinBloodPressure())
                         .timeTag(bPressure.getTimeTag())
                         .recordId(bPressure.getId())
                         .build();
@@ -86,14 +91,14 @@ public class RecordService {
     }
 
     public BPressureResponse updateBPressure(BPressure bPressure, BPressureUpdateVO requestRecord) {
-        bPressure.setBloodPressure(requestRecord.getBloodPressure());
+        bPressure.setMinBloodPressure(requestRecord.getMinBloodPressure());
+        bPressure.setMaxBloodPressure(requestRecord.getMaxBloodPressure());
+        bPressure.setHeartBeat(requestRecord.getHeartBeat());
         bPressure.setTimeTag(requestRecord.getTimeTag());
 
         BPressure saved = bPressureRepository.save(bPressure);
 
-        return
-                bPressureConvert(saved);
-
+        return bPressureConvert(saved);
     }
 
     public Optional<BSugar> findBSugarByUserAndId(User user, Long recordId) {
@@ -168,7 +173,7 @@ public class RecordService {
             detailConverted.add(mealDetailConvert(detail));
         }
 
-        return MealResponseVO.builder().mealId(saved.getId())
+        return MealResponseVO.builder().recordId(saved.getId())
                 .mealDetails(detailConverted)
                 .timeTag(saved.getTimeTag())
                 .build();

@@ -14,9 +14,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class BSugarUpdateVO {
 
-    @ApiModelProperty(value = "유저 ID", example = "123123", required = true)
-    @NotNull(message = "User Id cannot be null")
-    private String userId;
     @ApiModelProperty(value = "시간 태그",example = "아침", required = true)
     @NotNull(message = "Time tag cannot be null")
     private String timeTag;

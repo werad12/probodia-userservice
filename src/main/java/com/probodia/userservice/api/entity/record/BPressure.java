@@ -21,7 +21,16 @@ import javax.validation.constraints.NotNull;
 public class BPressure extends Records {
 
     @NotNull
-    @Column(name = "BLOOD_PRESSURE")
-    private Integer bloodPressure;
+    @Column(name = "MAX_PRESSURE")
+    private Integer maxBloodPressure;
+
+    @NotNull
+    @Column(name = "MIN_PRESSURE")
+    private Integer minBloodPressure;
+
+    @NotNull
+    @Column(name = "HEARTBEAT")
+    private Integer heartBeat;
+
 
 }

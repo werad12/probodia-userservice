@@ -18,8 +18,14 @@ public class BPressureResponse {
     @ApiModelProperty(value = "시간 태그",example = "아침")
     private String timeTag;
 
-    @ApiModelProperty(value = "혈압 수치",example = "145")
-    private Integer bloodPressure;
+    @ApiModelProperty(value = "최대 혈압 수치", required = true,example = "145")
+    private Integer maxBloodPressure;
+
+    @ApiModelProperty(value = "최소 혈압 수치", required = true,example = "145")
+    private Integer minBloodPressure;
+
+    @ApiModelProperty(value = "맥박 수치", required = true,example = "145")
+    private Integer heartBeat;
 
     @ApiModelProperty(value = "Record ID",example = "123123")
     private Long recordId;

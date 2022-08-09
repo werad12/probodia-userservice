@@ -15,9 +15,6 @@ import javax.validation.constraints.Size;
 @Data
 public class BSugarVO {
 
-    @ApiModelProperty(value = "유저 ID", required = true,example = "123123")
-    @NotNull(message = "User Id cannot be null")
-    private String userId;
     @ApiModelProperty(value = "시간 태그", required = true,example = "아침")
     @NotNull(message = "Time tag cannot be null")
     @Size(max = 10, message="Time tag not be more than 10 charaters")
