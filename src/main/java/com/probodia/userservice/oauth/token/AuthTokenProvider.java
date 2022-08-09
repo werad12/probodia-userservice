@@ -2,6 +2,7 @@ package com.probodia.userservice.oauth.token;
 
 import com.probodia.userservice.oauth.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,16 @@ public class AuthTokenProvider {
     public AuthToken convertAuthToken(String token) {
         log.info("REFRESH TOKEN : {}",token);
         return new AuthToken(token, key);
+    }
+
+    public String getTokenSubject(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
     }
 
     public Authentication getAuthentication(AuthToken authToken) {

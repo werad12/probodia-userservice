@@ -3,6 +3,7 @@ package com.probodia.userservice.api.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,10 +24,9 @@ public class HealthCheckController {
 
     }
 
-    @GetMapping("configTest")
-    public String formTest(){
-        String ret = env.getProperty("testConfig");
-        return ret;
+    @GetMapping("header_test")
+    public String headerTest(@RequestHeader(value = "Authorization")String token){
+        return token;
     }
 
 
