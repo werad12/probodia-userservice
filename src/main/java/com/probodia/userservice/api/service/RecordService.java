@@ -50,7 +50,6 @@ public class RecordService {
         return
                 BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
                         .timeTag(bSugar.getTimeTag())
-                        .userId(bSugar.getUser().getUserId())
                         .recordId(bSugar.getId())
                         .build();
     }
@@ -70,7 +69,6 @@ public class RecordService {
         return
                 BPressureResponse.builder().bloodPressure(bPressure.getBloodPressure())
                         .timeTag(bPressure.getTimeTag())
-                        .userId(bPressure.getUser().getUserId())
                         .recordId(bPressure.getId())
                         .build();
     }
@@ -172,7 +170,7 @@ public class RecordService {
 
         return MealResponseVO.builder().mealId(saved.getId())
                 .mealDetails(detailConverted)
-                .timeTag(saved.getTimeTag()).userId(saved.getUser().getUserId())
+                .timeTag(saved.getTimeTag())
                 .build();
 
     }
@@ -258,7 +256,7 @@ public class RecordService {
         return MedicineResponseVO.builder().medicineId(saved.getMedicineId())
                 .recordId(saved.getId()).medicineCnt(saved.getMedicineCnt())
                 .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag())
-                .userId(saved.getUser().getUserId()).build();
+                .build();
     }
 
     public Optional<Medicine> findMedicineByUserAndId(User user, Long recordId) {

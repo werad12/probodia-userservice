@@ -12,8 +12,6 @@ import lombok.*;
 @Data
 public class BSugarResponse {
 
-    @ApiModelProperty(value = "유저 ID", example = "123123")
-    private String userId;
     @ApiModelProperty(value = "시간 태그",example = "아침")
     private String timeTag;
 
