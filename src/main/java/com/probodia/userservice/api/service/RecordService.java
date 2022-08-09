@@ -9,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class RecordService {
@@ -35,12 +33,14 @@ public class RecordService {
         this.medicineRepository = medicineRepository;
     }
 
-    public BSugarResponse saveSugar(String timeTag, Integer bloodSugar, User user) {
+    public BSugarResponse saveSugar(BSugarVO request, User user) {
 
         BSugar bSugar = new BSugar();
         bSugar.setUser(user);
-        bSugar.setTimeTag(timeTag);
-        bSugar.setBloodSugar(bloodSugar);
+        bSugar.setTimeTag(request.getTimeTag());
+        bSugar.setBloodSugar(request.getBloodSugar());
+        bSugar.setRecordDate(request.getRecordDate());
+
         BSugar saved = bSugarRepository.save(bSugar);
 
         return bSugarConvert(saved);
@@ -51,6 +51,7 @@ public class RecordService {
                 BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
                         .timeTag(bSugar.getTimeTag())
                         .recordId(bSugar.getId())
+                        .recordDate(bSugar.getRecordDate())
                         .build();
     }
 
@@ -62,6 +63,7 @@ public class RecordService {
         bPressure.setMaxBloodPressure(request.getMaxBloodPressure());
         bPressure.setMinBloodPressure(request.getMinBloodPressure());
         bPressure.setHeartBeat(request.getHeartBeat());
+        bPressure.setRecordDate(request.getRecordDate());
         BPressure saved = bPressureRepository.save(bPressure);
 
         return bPressureConvert(saved);
@@ -74,6 +76,7 @@ public class RecordService {
                         .maxBloodPressure(bPressure.getMaxBloodPressure())
                         .minBloodPressure(bPressure.getMinBloodPressure())
                         .timeTag(bPressure.getTimeTag())
+                        .recordDate(bPressure.getRecordDate())
                         .recordId(bPressure.getId())
                         .build();
     }
@@ -84,6 +87,7 @@ public class RecordService {
     public BSugarResponse updateBSugar(BSugar sugar,BSugarUpdateVO updateVO){
         sugar.setBloodSugar(updateVO.getBloodSugar());
         sugar.setTimeTag(updateVO.getTimeTag());
+        sugar.setRecordDate(updateVO.getRecordDate());
 
         BSugar saved = bSugarRepository.save(sugar);
 
@@ -95,6 +99,7 @@ public class RecordService {
         bPressure.setMaxBloodPressure(requestRecord.getMaxBloodPressure());
         bPressure.setHeartBeat(requestRecord.getHeartBeat());
         bPressure.setTimeTag(requestRecord.getTimeTag());
+        bPressure.setRecordDate(requestRecord.getRecordDate());
 
         BPressure saved = bPressureRepository.save(bPressure);
 
@@ -119,11 +124,12 @@ public class RecordService {
         return deleteRecord.getId();
     }
 
-    public Meal saveMeal(User user, String timeTag) {
+    public Meal saveMeal(User user, String timeTag, String recordDate) {
 
         Meal meal = new Meal();
         meal.setTimeTag(timeTag);
         meal.setUser(user);
+        meal.setRecordDate(recordDate);
 
         return meal;
 
@@ -176,6 +182,7 @@ public class RecordService {
         return MealResponseVO.builder().recordId(saved.getId())
                 .mealDetails(detailConverted)
                 .timeTag(saved.getTimeTag())
+                .recordDate(saved.getRecordDate())
                 .build();
 
     }
@@ -206,6 +213,7 @@ public class RecordService {
     public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
 
         meal.setTimeTag(requestRecord.getTimeTag());
+        meal.setRecordDate(requestRecord.getRecordDate());
         for(MealDetailUpdateVO detail : requestRecord.getMealDetails()){
             Optional<MealDetail> detailEntity =
                     mealDetailRepository.findById(detail.getMealDetailId());
@@ -246,6 +254,7 @@ public class RecordService {
         Medicine medicine = new Medicine();
         medicine.setUser(user);
         medicine.setTimeTag(requestRecord.getTimeTag());
+        medicine.setRecordDate(requestRecord.getRecordDate());
         if(requestRecord.getMedicineId()!=null)
             medicine.setMedicineId(requestRecord.getMedicineId());
 
@@ -259,6 +268,7 @@ public class RecordService {
 
     public MedicineResponseVO convertMedicine(Medicine saved){
         return MedicineResponseVO.builder().medicineId(saved.getMedicineId())
+                .recordDate(saved.getRecordDate())
                 .recordId(saved.getId()).medicineCnt(saved.getMedicineCnt())
                 .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag())
                 .build();
@@ -278,6 +288,7 @@ public class RecordService {
             medicine.setMedicineId(requestRecord.getMedicineId());
         medicine.setMedicineCnt(requestRecord.getMedicineCnt());
         medicine.setMedicineName(requestRecord.getMedicineName());
+        medicine.setRecordDate(requestRecord.getRecordDate());
 
         Medicine saved = medicineRepository.save(medicine);
 

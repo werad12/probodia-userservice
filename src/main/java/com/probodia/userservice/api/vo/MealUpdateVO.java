@@ -3,10 +3,13 @@ package com.probodia.userservice.api.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @ApiModel(value = "음식 수정 모델")
@@ -29,5 +32,8 @@ public class MealUpdateVO {
     @ApiModelProperty(value = "종류에 따른 음식의 정보", required = true)
     @NotNull(message = "Meal Detail cannot be null")
     private List<MealDetailUpdateVO> mealDetails;
-
+    @ApiModelProperty(value = "기록 시간", example = "2017-11-12 13:11:34")
+    @NotNull(message = "Record time cannot be null")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String recordDate;
 }

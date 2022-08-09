@@ -51,7 +51,7 @@ public class RecordController {
         //user 찾기
         User user = getUserByToken(token);
         //혈당 기록 저장
-        BSugarResponse saved = recordService.saveSugar(requestRecord.getTimeTag(),requestRecord.getBloodSugar(), user);
+        BSugarResponse saved = recordService.saveSugar(requestRecord, user);
 
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
@@ -77,7 +77,7 @@ public class RecordController {
         //user 찾기
         User user = getUserByToken(token);
         //Meal 데이터 먼저 저장
-        Meal savedMeal = recordService.saveMeal(user, requestRecord.getTimeTag());
+        Meal savedMeal = recordService.saveMeal(user, requestRecord.getTimeTag(),requestRecord.getRecordDate());
 
         //Meal Detail 저장 + Meal 데이터 일부 수정
         MealResponseVO result = recordService.saveMealDetail(savedMeal, requestRecord.getMealDetails());
