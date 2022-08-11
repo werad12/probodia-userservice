@@ -1,5 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.1'
+    //초기 버전 2.7.1
+    id 'org.springframework.boot' version '2.5.14'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -20,7 +21,8 @@ repositories {
 
 
 ext {
-    set('springCloudVersion', "2021.0.3")
+    //원래 버전 2021.0.3
+    set('springCloudVersion', "2020.0.6")
 }
 
 dependencies {
@@ -31,9 +33,11 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    //swagger 추가
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
+    //swagger 추가 초기 2.8.0
+
+    //implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    //implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
     //eureka client
 
@@ -49,6 +53,13 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //config server
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    //rabbitMq
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
     //테스트에서 롬복 사용
     testCompileOnly 'org.projectlombok:lombok'

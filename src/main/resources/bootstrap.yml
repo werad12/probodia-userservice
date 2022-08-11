@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: local
+  config:
+    import: "optional:configserver:${config-server-url}"
+  cloud:
+    config:
+      name: user-service
+  application:
+    name: user-service
+
+config-server-url: http://127.0.0.1:8888/
