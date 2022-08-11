@@ -19,8 +19,6 @@ public class HealthCheckController {
     @Value("${server.port}")
     String serverPort;
 
-    @Value("${testConfig}")
-    String testConfig;
 
     @GetMapping("health_check")
     public String healthCheck(){
@@ -29,10 +27,6 @@ public class HealthCheckController {
 
     }
 
-    @GetMapping("config_test")
-    public String configTest(){
-        return testConfig;
-    }
 
     @GetMapping("header_test")
     public String headerTest(@RequestHeader(value = "Authorization")String token){
