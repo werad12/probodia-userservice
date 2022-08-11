@@ -37,6 +37,10 @@ public class MealDetail {
     @NotNull
     private String foodName;
 
+    @Column(name = "QUANTITY")
+    @NotNull
+    private Integer quantity;
+
     @Column(name = "FOOD_ID")
     private Long foodId;
 

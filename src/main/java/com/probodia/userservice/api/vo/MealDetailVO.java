@@ -28,8 +28,15 @@ public class MealDetailVO {
     @NotNull(message = "Food name cannot be null")
     private String foodName;
 
+    @ApiModelProperty(value = "음식 수량(그램)", required = true,example = "123")
+    @NotNull(message = "Food quantity cannot be null")
+    private Integer quantity;
+
+
     @ApiModelProperty(value = "음식 ID", required = true,example = "123")
     private Long foodId;
+
+
 
 
 }

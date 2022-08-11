@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @ApiModel(value = "음식 상세 수정 모델")
@@ -12,10 +13,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Valid
 public class MealDetailUpdateVO {
 
     @ApiModelProperty(value = "음식 상세 ID", required = true,example = "123123")
+    @NotNull(message = "Food detail Id cannot be null")
     private Long mealDetailId;
+
+    @ApiModelProperty(value = "음식 수량(그램)", required = true,example = "123")
+    @NotNull(message = "Food quantity cannot be null")
+    private Integer quantity;
 
     @ApiModelProperty(value = "칼로리", required = true,example = "123")
     private Integer calories;

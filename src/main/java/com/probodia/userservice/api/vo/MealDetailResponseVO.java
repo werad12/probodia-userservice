@@ -27,6 +27,9 @@ public class MealDetailResponseVO {
     @ApiModelProperty(value = "혈당", required = true,example = "123")
     private Integer bloodSugar;
 
+    @ApiModelProperty(value = "음식 수량(그램)", required = true,example = "123")
+    private Integer quantity;
+
     @ApiModelProperty(value = "음식 이름", required = true,example = "라면")
     @NotNull(message = "Food name cannot be null")
     private String foodName;

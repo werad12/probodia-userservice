@@ -138,14 +138,11 @@ public class RecordService {
     public MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
 
 
-
-        List<MealDetailResponseVO> resultDetails = new ArrayList<>();
-
         for(MealDetailVO requestDetail : mealDetails){
             MealDetail col = new MealDetail();
 
             col.setFoodName(requestDetail.getFoodName());
-
+            col.setQuantity(requestDetail.getQuantity());
 
             if(requestDetail.getCalories() != null){
                 col.setCalorie(requestDetail.getCalories());
@@ -190,6 +187,7 @@ public class RecordService {
     MealDetailResponseVO mealDetailConvert(MealDetail saved){
         return MealDetailResponseVO.builder().mealDetailId(saved.getId())
                 .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
+                .quantity(saved.getQuantity())
                 .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
     }
 
@@ -221,6 +219,7 @@ public class RecordService {
                 throw new NoSuchElementException("Not found Meal Detail matched by mealDetailId");
 
             MealDetail updateTarget = detailEntity.get();
+            updateTarget.setQuantity(detail.getQuantity());
             updateTarget.setFoodName(detail.getFoodName());
             updateTarget.setCalorie(detail.getCalories());
             updateTarget.setImageUrl(detail.getImageUrl());
