@@ -4,15 +4,21 @@ import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
 import com.probodia.userservice.api.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
+@Slf4j
 public class RecordService {
 
     private BPressureRepository bPressureRepository;
@@ -235,7 +241,17 @@ public class RecordService {
     }
 
 
+    public List<Records> findAllByUser(User user){
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
+        String startTime = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String endTime = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        log.info("Start time : {}, End time : {}",startTime,endTime);
+
+        return recordRepository.findAllByUserAndRecordDateBetween(user,startTime,endTime);
+    }
 
     public Page<Records> findAllByUser(User user, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);

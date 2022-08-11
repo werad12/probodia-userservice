@@ -277,6 +277,17 @@ public class RecordController {
         return new ResponseEntity<>(new PagingLookUpVO(retValue,pageInfo),HttpStatus.OK);
     }
 
+    @GetMapping("/getAllToday")
+    @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "오늘의 기록을 가져온다.")
+    public ResponseEntity<List<RecordLookUpVO>> getAllTodayRecords(@RequestHeader(value = "Authorization")String token){
+        //user 찾기
+        User user = getUserByToken(token);
+        //user에 따른 레코드 찾기
+        List<Records> records = recordService.findAllByUser(user);
+
+        return new ResponseEntity<>(recordService.getRecordList(records),HttpStatus.OK);
+    }
+
     private User getUserByToken(String bearerToken){
 
         return getUser(tokenProvider.getTokenSubject(bearerToken.substring(7)));
