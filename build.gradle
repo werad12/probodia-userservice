@@ -61,6 +61,9 @@ dependencies {
     //rabbitMq
     implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
+    //테스트에서 h2 db 사용
+    implementation 'com.h2database:h2'
+
     //테스트에서 롬복 사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'

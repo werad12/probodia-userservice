@@ -46,4 +46,10 @@ public class ExControllerAdvice {
         return new ErrorResult("Request is not valid", errors);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleIllegalArgsException(IllegalArgumentException e){
+        return new ErrorResult("Illegal Argument. Try again.", e.getMessage());
+    }
+
 }

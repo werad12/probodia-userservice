@@ -2,6 +2,8 @@ package com.probodia.userservice.api.entity.record;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.probodia.userservice.api.entity.base.BaseTime;
+import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
+import com.probodia.userservice.api.entity.enums.converter.TimeTagCodeConverter;
 import com.probodia.userservice.api.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,10 +36,10 @@ public class Records extends BaseTime {
     @JoinColumn(name = "USER_SEQ")
     private User user;
 
-    @Column(name = "TIME_TAG", length = 10)
+    @Convert(converter = TimeTagCodeConverter.class)
+    @Column(name = "TIME_TAG")
     @NotNull
-    @Size(max = 10)
-    private String timeTag;
+    private TimeTagCode timeTag;
 
     @Column(name = "RTYPE",insertable = false,updatable = false)
     protected String type;

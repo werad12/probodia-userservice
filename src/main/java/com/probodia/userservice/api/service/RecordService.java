@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.service;
 
+import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
 import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
@@ -39,13 +40,18 @@ public class RecordService {
         this.medicineRepository = medicineRepository;
     }
 
+    private void setRecordBase(Records record, User user, String timeTag, String recordDate){
+        record.setUser(user);
+        record.setRecordDate(recordDate);
+        record.setTimeTag(TimeTagCode.findByValue(timeTag));
+
+    }
+
     public BSugarResponse saveSugar(BSugarVO request, User user) {
 
         BSugar bSugar = new BSugar();
-        bSugar.setUser(user);
-        bSugar.setTimeTag(request.getTimeTag());
+        setRecordBase(bSugar,user,request.getTimeTag(),request.getRecordDate());
         bSugar.setBloodSugar(request.getBloodSugar());
-        bSugar.setRecordDate(request.getRecordDate());
 
         BSugar saved = bSugarRepository.save(bSugar);
 
@@ -55,7 +61,7 @@ public class RecordService {
     public BSugarResponse bSugarConvert(BSugar bSugar){
         return
                 BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
-                        .timeTag(bSugar.getTimeTag())
+                        .timeTag(bSugar.getTimeTag().getValue())
                         .recordId(bSugar.getId())
                         .recordDate(bSugar.getRecordDate())
                         .build();
@@ -64,12 +70,10 @@ public class RecordService {
     public BPressureResponse savePressure(BPressureVO request, User user) {
 
         BPressure bPressure = new BPressure();
-        bPressure.setUser(user);
-        bPressure.setTimeTag(request.getTimeTag());
+        setRecordBase(bPressure,user,request.getTimeTag(),request.getRecordDate());
         bPressure.setMaxBloodPressure(request.getMaxBloodPressure());
         bPressure.setMinBloodPressure(request.getMinBloodPressure());
         bPressure.setHeartBeat(request.getHeartBeat());
-        bPressure.setRecordDate(request.getRecordDate());
         BPressure saved = bPressureRepository.save(bPressure);
 
         return bPressureConvert(saved);
@@ -81,7 +85,7 @@ public class RecordService {
                         .heartBeat(bPressure.getHeartBeat())
                         .maxBloodPressure(bPressure.getMaxBloodPressure())
                         .minBloodPressure(bPressure.getMinBloodPressure())
-                        .timeTag(bPressure.getTimeTag())
+                        .timeTag(bPressure.getTimeTag().getValue())
                         .recordDate(bPressure.getRecordDate())
                         .recordId(bPressure.getId())
                         .build();
@@ -92,7 +96,7 @@ public class RecordService {
 
     public BSugarResponse updateBSugar(BSugar sugar,BSugarUpdateVO updateVO){
         sugar.setBloodSugar(updateVO.getBloodSugar());
-        sugar.setTimeTag(updateVO.getTimeTag());
+        sugar.setTimeTag(TimeTagCode.findByValue(updateVO.getTimeTag()));
         sugar.setRecordDate(updateVO.getRecordDate());
 
         BSugar saved = bSugarRepository.save(sugar);
@@ -104,7 +108,7 @@ public class RecordService {
         bPressure.setMinBloodPressure(requestRecord.getMinBloodPressure());
         bPressure.setMaxBloodPressure(requestRecord.getMaxBloodPressure());
         bPressure.setHeartBeat(requestRecord.getHeartBeat());
-        bPressure.setTimeTag(requestRecord.getTimeTag());
+        bPressure.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         bPressure.setRecordDate(requestRecord.getRecordDate());
 
         BPressure saved = bPressureRepository.save(bPressure);
@@ -133,9 +137,7 @@ public class RecordService {
     public Meal saveMeal(User user, String timeTag, String recordDate) {
 
         Meal meal = new Meal();
-        meal.setTimeTag(timeTag);
-        meal.setUser(user);
-        meal.setRecordDate(recordDate);
+        setRecordBase(meal,user,timeTag,recordDate);
 
         return meal;
 
@@ -184,7 +186,7 @@ public class RecordService {
 
         return MealResponseVO.builder().recordId(saved.getId())
                 .mealDetails(detailConverted)
-                .timeTag(saved.getTimeTag())
+                .timeTag(saved.getTimeTag().getValue())
                 .recordDate(saved.getRecordDate())
                 .build();
 
@@ -216,7 +218,7 @@ public class RecordService {
 
     public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
 
-        meal.setTimeTag(requestRecord.getTimeTag());
+        meal.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         meal.setRecordDate(requestRecord.getRecordDate());
         for(MealDetailUpdateVO detail : requestRecord.getMealDetails()){
             Optional<MealDetail> detailEntity =
@@ -267,9 +269,7 @@ public class RecordService {
     public MedicineResponseVO saveMedicine(MedicineVO requestRecord, User user) {
 
         Medicine medicine = new Medicine();
-        medicine.setUser(user);
-        medicine.setTimeTag(requestRecord.getTimeTag());
-        medicine.setRecordDate(requestRecord.getRecordDate());
+        setRecordBase(medicine,user,requestRecord.getTimeTag(),requestRecord.getRecordDate());
         if(requestRecord.getMedicineId()!=null)
             medicine.setMedicineId(requestRecord.getMedicineId());
 
@@ -285,7 +285,7 @@ public class RecordService {
         return MedicineResponseVO.builder().medicineId(saved.getMedicineId())
                 .recordDate(saved.getRecordDate())
                 .recordId(saved.getId()).medicineCnt(saved.getMedicineCnt())
-                .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag())
+                .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag().getValue())
                 .build();
     }
 
@@ -304,6 +304,7 @@ public class RecordService {
         medicine.setMedicineCnt(requestRecord.getMedicineCnt());
         medicine.setMedicineName(requestRecord.getMedicineName());
         medicine.setRecordDate(requestRecord.getRecordDate());
+        medicine.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
 
         Medicine saved = medicineRepository.save(medicine);
 
