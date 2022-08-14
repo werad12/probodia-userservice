@@ -89,15 +89,16 @@ public class RecordController {
     @PostMapping("/medicine")
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
     public ResponseEntity<List<MedicineResponseVO>> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @Valid @RequestBody List<MedicineVO> requestRecord){
+                                                                 @Valid @RequestBody MedicineListVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
 
         List<MedicineResponseVO> ret = new ArrayList<>();
         //투약 기록 저장
-        for(MedicineVO request : requestRecord){
-            MedicineResponseVO saved = recordService.saveMedicine(request, user);
+        for(MedicineVO request : requestRecord.getMedicineDetails()){
+            MedicineResponseVO saved = recordService.saveMedicine(request, requestRecord.getTimeTag(),
+                    requestRecord.getRecordDate(), user);
             ret.add(saved);
         }
 
@@ -287,6 +288,19 @@ public class RecordController {
 
         return new ResponseEntity<>(recordService.getRecordList(records),HttpStatus.OK);
     }
+
+    @GetMapping("/getAllByDateAndTimeTag")
+    @ApiOperation(value = "기간과 timetag(아침, 점심, 저녁)으로 전체 기록을 가져온다.", notes = "timetag에는 아침, 점심, 저녁만 들어갈 수 있고, 혈당의 경우는 아침 -> 아침 식전, 식후 데이터를 모두 가져온다. 페이징은 하지 않는다.")
+    public ResponseEntity<List<RecordLookUpVO>> getAllByDateAndTimeTag(@RequestHeader(value = "Authorization")String token,
+                                                                       @Valid @RequestBody DateAndTimeTagFilterRequestVO request){
+        //user 찾기
+        User user = getUserByToken(token);
+        //user에 따른 레코드 찾기
+        List<Records> records = recordService.findAllByUserAndDateAndTimeTagAndRecordType(user,request);
+
+        return new ResponseEntity<>(recordService.getRecordList(records),HttpStatus.OK);
+    }
+
 
     private User getUserByToken(String bearerToken){
 

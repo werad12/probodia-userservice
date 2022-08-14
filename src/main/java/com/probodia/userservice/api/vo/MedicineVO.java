@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@ApiModel(value = "투약 기록 모델")
+@ApiModel(value = "투약 기록 상세 모델")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -18,10 +18,7 @@ import java.util.Date;
 @Data
 public class MedicineVO {
 
-    @ApiModelProperty(value = "시간 태그", required = true,example = "아침")
-    @NotNull(message = "Time tag cannot be null")
-    @Size(max = 10, message="Time tag not be more than 10 characters")
-    private String timeTag;
+
 
     @ApiModelProperty(value = "하루 투약 횟수", required = true,example = "145")
     @NotNull(message = "Record content cannot be null")
@@ -35,9 +32,5 @@ public class MedicineVO {
     @ApiModelProperty(value = "약 ID",example = "FP1234")
     private String medicineId;
 
-    @ApiModelProperty(value = "기록 시간", example = "2017-11-12 13:11:34")
-    @NotNull(message = "Record time cannot be null")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String recordDate;
 
 }

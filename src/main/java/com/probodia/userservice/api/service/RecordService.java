@@ -255,6 +255,38 @@ public class RecordService {
         return recordRepository.findAllByUserAndRecordDateBetween(user,startTime,endTime);
     }
 
+    public List<Records> findAllByUserAndDateAndTimeTagAndRecordType(User user, DateAndTimeTagFilterRequestVO request){
+
+        List<TimeTagCode> timeTagCodes = new ArrayList<>();
+
+        for(String type : request.getTimeTagList()){
+            switch (type){
+                case "아침":
+                    timeTagCodes.add(TimeTagCode.MORNING_BEFORE);
+                    timeTagCodes.add(TimeTagCode.MORNING);
+                    timeTagCodes.add(TimeTagCode.MORNING_AFTER);
+                    break;
+                case "점심":
+                    timeTagCodes.add(TimeTagCode.NOON_BEFORE);
+                    timeTagCodes.add(TimeTagCode.NOON);
+                    timeTagCodes.add(TimeTagCode.NOON_AFTER);
+                    break;
+                case "저녁":
+                    timeTagCodes.add(TimeTagCode.NIGHT_BEFORE);
+                    timeTagCodes.add(TimeTagCode.NIGHT);
+                    timeTagCodes.add(TimeTagCode.NIGHT_AFTER);
+                    break;
+                default:
+                    throw new IllegalStateException(String.format("Not supported type %s",type));
+            }
+        }
+
+        log.info("Start time : {}, End time : {}", request.getStartDate(),request.getEndDate());
+
+        return recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(user,
+                request.getStartDate(), request.getEndDate(),request.getFilterType(), timeTagCodes);
+    }
+
     public Page<Records> findAllByUser(User user, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return recordRepository.findAllByUserOrderByCreatedDateDesc(pageRequest,user);
@@ -266,10 +298,10 @@ public class RecordService {
     }
 
 
-    public MedicineResponseVO saveMedicine(MedicineVO requestRecord, User user) {
+    public MedicineResponseVO saveMedicine(MedicineVO requestRecord,String timeTag, String recordDate, User user) {
 
         Medicine medicine = new Medicine();
-        setRecordBase(medicine,user,requestRecord.getTimeTag(),requestRecord.getRecordDate());
+        setRecordBase(medicine,user,timeTag,recordDate);
         if(requestRecord.getMedicineId()!=null)
             medicine.setMedicineId(requestRecord.getMedicineId());
 

@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.repository.record;
 
+import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
 import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import org.springframework.data.domain.Page;
@@ -26,5 +27,11 @@ public interface RecordRepository extends JpaRepository<Records,Long> {
 
     Page<Records> findAllByUserAndTypeInOrderByCreatedDateDesc(Pageable pageable, User user, List<String> typeList);
     List<Records> findAllByUserAndRecordDateBetween(User user, String start, String end);
+
+    List<Records> findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(User user,
+                                                                                                String start,
+                                                                                                String end,
+                                                                                                List<String> typeList,
+                                                                                                List<TimeTagCode> timeTagCodes);
 
 }

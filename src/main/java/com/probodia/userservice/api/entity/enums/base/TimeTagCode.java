@@ -12,7 +12,10 @@ public enum TimeTagCode implements BaseEnumCode<String>{
     NOON_AFTER("점심 식후"),
     NIGHT_BEFORE("저녁 식전"),
     NIGHT_AFTER("저녁 식후"),
-    ETC("기타")
+    ETC("기타"),
+    MORNING("아침"),
+    NOON("점심"),
+    NIGHT("저녁")
     ;
 
     private final String value;

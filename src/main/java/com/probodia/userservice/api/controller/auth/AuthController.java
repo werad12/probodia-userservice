@@ -173,9 +173,11 @@ public class AuthController {
 
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
+
         if (!authRefreshToken.validate()) {
             throw new UnAuthorizedException("Invalid refresh token.");
         }
+
 
         // userId refresh token 으로 DB 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
@@ -191,6 +193,8 @@ public class AuthController {
         );
 
         long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
+
+        log.info("valid time : {}",validTime);
 
         // refresh 토큰 기간이 3일 이하로 남은 경우, refresh 토큰 갱신
         if (validTime <= THREE_DAYS_MSEC) {
