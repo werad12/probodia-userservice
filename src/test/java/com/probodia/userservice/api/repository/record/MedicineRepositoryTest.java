@@ -1,32 +1,33 @@
 package com.probodia.userservice.api.repository.record;
 
 import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
-import com.probodia.userservice.api.entity.record.BPressure;
+import com.probodia.userservice.api.entity.record.BSugar;
+import com.probodia.userservice.api.entity.record.Medicine;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
-import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
+import com.probodia.userservice.testutil.BeforeEachMethod;
+import com.probodia.userservice.testutil.TestStaticVariable;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Slf4j
 @ActiveProfiles("test")
-class BPressureRepositoryTest {
+class MedicineRepositoryTest {
+
 
     @Autowired
-    BPressureRepository bPressureRepository;
+    MedicineRepository medicineRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -51,43 +52,38 @@ class BPressureRepositoryTest {
         userRepository.save(user);
 
     }
-
-
-
     @Test
-    @DisplayName("혈압 생성 테스트")
+    @DisplayName("투약 생성 테스트")
     void saveTest(){
-        BPressure bPressure = new BPressure();
+        Medicine medicine = new Medicine();
 
         User user = userRepository.findByUserId(userid);
 
-        int maxBP = 456;
-        int minBP = 123;
-        int heartB = 1234;
+        String medicineName = "test Medicine";
+        String medicineId = "TEST-001";
+        int quantity = 456;
         String recordDate = "2017-11-11 12:12:12";
-        TimeTagCode timeTag = TimeTagCode.MORNING;
+        TimeTagCode timeTag = TimeTagCode.MORNING_AFTER;
 
 
-        bPressure.setUser(user);
+        medicine.setUser(user);
 
-        bPressure.setRecordDate(recordDate);
-        bPressure.setTimeTag(timeTag);
+        medicine.setRecordDate(recordDate);
+        medicine.setTimeTag(timeTag);
 
-        bPressure.setMaxBloodPressure(maxBP);
-        bPressure.setMinBloodPressure(minBP);
-        bPressure.setHeartBeat(heartB);
+        medicine.setMedicineId(medicineId);
+        medicine.setMedicineName(medicineName);
+        medicine.setMedicineCnt(quantity);
 
-        BPressure saved = bPressureRepository.save(bPressure);
+        Medicine saved = medicineRepository.save(medicine);
 
-        assertThat(saved.getMaxBloodPressure()).isEqualTo(maxBP);
-        assertThat(saved.getMinBloodPressure()).isEqualTo(minBP);
-        assertThat(saved.getHeartBeat()).isEqualTo(heartB);
+        assertThat(saved.getMedicineCnt()).isEqualTo(quantity);
+        assertThat(saved.getMedicineId()).isEqualTo(medicineId);
+        assertThat(saved.getMedicineName()).isEqualTo(medicineName);
 
         assertThat(saved.getRecordDate()).isEqualTo(recordDate);
         assertThat(saved.getTimeTag()).isEqualTo(timeTag);
+
     }
-
-
-
 
 }

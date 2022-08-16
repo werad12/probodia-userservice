@@ -1,32 +1,29 @@
 package com.probodia.userservice.api.repository.record;
 
 import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
-import com.probodia.userservice.api.entity.record.BPressure;
+import com.probodia.userservice.api.entity.record.BSugar;
+import com.probodia.userservice.api.entity.record.Meal;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
-import com.probodia.userservice.api.service.UserService;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 @Slf4j
 @ActiveProfiles("test")
-class BPressureRepositoryTest {
+class MealRepositoryTest {
 
     @Autowired
-    BPressureRepository bPressureRepository;
+    MealRepository mealRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -55,39 +52,34 @@ class BPressureRepositoryTest {
 
 
     @Test
-    @DisplayName("혈압 생성 테스트")
+    @DisplayName("음식 생성 테스트")
     void saveTest(){
-        BPressure bPressure = new BPressure();
+        Meal meal = new Meal();
 
         User user = userRepository.findByUserId(userid);
 
-        int maxBP = 456;
-        int minBP = 123;
-        int heartB = 1234;
+        int totalCalories = 456;
         String recordDate = "2017-11-11 12:12:12";
         TimeTagCode timeTag = TimeTagCode.MORNING;
+        String imageUrl = "http://asdf.com";
 
 
-        bPressure.setUser(user);
+        meal.setUser(user);
 
-        bPressure.setRecordDate(recordDate);
-        bPressure.setTimeTag(timeTag);
+        meal.setRecordDate(recordDate);
+        meal.setTimeTag(timeTag);
 
-        bPressure.setMaxBloodPressure(maxBP);
-        bPressure.setMinBloodPressure(minBP);
-        bPressure.setHeartBeat(heartB);
+        meal.setTotalCalories(totalCalories);
+        meal.setTotalImageUrl(imageUrl);
+        meal.setMealDetails(null);
 
-        BPressure saved = bPressureRepository.save(bPressure);
+        Meal saved = mealRepository.save(meal);
 
-        assertThat(saved.getMaxBloodPressure()).isEqualTo(maxBP);
-        assertThat(saved.getMinBloodPressure()).isEqualTo(minBP);
-        assertThat(saved.getHeartBeat()).isEqualTo(heartB);
+        assertThat(saved.getTotalCalories()).isEqualTo(totalCalories);
+        assertThat(saved.getTotalImageUrl()).isEqualTo(imageUrl);
 
         assertThat(saved.getRecordDate()).isEqualTo(recordDate);
         assertThat(saved.getTimeTag()).isEqualTo(timeTag);
     }
-
-
-
 
 }
