@@ -1,21 +1,18 @@
 package com.probodia.userservice.api.controller.user;
 
 import com.probodia.userservice.api.entity.user.User;
-import com.probodia.userservice.api.service.UserService;
+import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.UserInfoRequestVO;
 import com.probodia.userservice.api.vo.UserInfoVO;
-import com.probodia.userservice.common.ApiResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")

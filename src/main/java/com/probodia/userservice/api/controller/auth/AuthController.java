@@ -5,39 +5,27 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.exception.UnAuthorizedException;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
-import com.probodia.userservice.api.service.UserService;
+import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.LoginResponseVO;
-import com.probodia.userservice.common.ApiResponse;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.oauth.entity.RoleType;
-import com.probodia.userservice.oauth.entity.UserPrincipal;
-import com.probodia.userservice.oauth.service.CustomOAuth2UserService;
 import com.probodia.userservice.oauth.token.AuthToken;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import com.probodia.userservice.utils.CookieUtil;
 import com.probodia.userservice.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.Map;
-
-import static com.probodia.userservice.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.*;
 
 @RestController
 @RequiredArgsConstructor

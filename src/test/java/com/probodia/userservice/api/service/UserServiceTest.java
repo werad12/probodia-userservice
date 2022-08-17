@@ -2,12 +2,11 @@ package com.probodia.userservice.api.service;
 
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
+import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 

@@ -1,4 +1,4 @@
-package com.probodia.userservice.api.service;
+package com.probodia.userservice.api.service.user;
 
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
 import com.probodia.userservice.api.entity.user.User;
