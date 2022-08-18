@@ -14,6 +14,7 @@ import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import com.probodia.userservice.utils.CookieUtil;
 import com.probodia.userservice.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Api(value = "AuthController", description = "토큰과 관련된 API")
 public class AuthController {
 
     private final AppProperties appProperties;
@@ -49,8 +51,6 @@ public class AuthController {
             @RequestBody AuthReqModel authReqModel
     ) {
 
-        log.info("AUTH REQ MODEL : {}",authReqModel);
-
         //kakao access token을 가지고 authentication을 진행한다.
         //200 응답 + id 값이 같은지
 
@@ -62,16 +62,6 @@ public class AuthController {
 
         if(!userId.equals(authReqModel.getId()))
             throw new UnAuthorizedException("Invalid User Id");
-
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        authReqModel.getId(),
-//                        authReqModel.getPassword()
-//                )
-//        );
-
-
-        //SecurityContextHolder.getContext().setAuthentication(authentication);
 
         //userId로 찾아서 user가 존재하지 않으면 user를 생성한다.
         User user = userService.getUser(userId);
@@ -108,14 +98,6 @@ public class AuthController {
             userRefreshTokenRepository.saveAndFlush(userRefreshToken);
          }
 
-        int cookieMaxAge = (int) refreshTokenExpiry / 60;
-        //CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        //CookieUtil.deleteCookie(request,response,USER_ID);
-
-        //CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-        //CookieUtil.addCookie(response,USER_ID,userId,cookieMaxAge);
-        //CookieUtil.addCookie(response,USER_TOKEN,accessToken.getToken(),cookieMaxAge);
-
         String token = accessToken.getToken();
         String returnRefreshToken = refreshToken.getToken();
         LoginResponseVO ret = new LoginResponseVO();
@@ -132,11 +114,6 @@ public class AuthController {
     @ApiOperation(value = "server access token 재발급", notes = "server refresh token을 통해 access token을 재발급 받는다." +
             " 리프레시 토큰은 여기서 RefreshToken의 이름으로 헤더에 담는다.")
     public ResponseEntity<String> refreshToken (HttpServletRequest request, HttpServletResponse response) {
-
-        //String refreshToken1 = HeaderUtil.getHeaderRefreshToken(request);
-
-        //log.info("refresh token from header : {}",refreshToken1);
-
 
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
@@ -156,8 +133,6 @@ public class AuthController {
 
         // refresh token
         String refreshToken = HeaderUtil.getHeaderRefreshToken(request);
-
-        log.info("refresh token from header : {}",refreshToken);
 
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
@@ -181,8 +156,6 @@ public class AuthController {
         );
 
         long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
-
-        log.info("valid time : {}",validTime);
 
         // refresh 토큰 기간이 3일 이하로 남은 경우, refresh 토큰 갱신
         if (validTime <= THREE_DAYS_MSEC) {

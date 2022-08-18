@@ -9,6 +9,7 @@ import com.probodia.userservice.api.vo.MealUpdateVO;
 import com.probodia.userservice.api.vo.MealVO;
 import com.probodia.userservice.api.vo.RecordDeleteRequest;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/record/meal")
 @Slf4j
+@Api(value = "Meal Controller", description = "식사 기록과 관련된 API")
 public class MealController {
 
     private MealService mealService;

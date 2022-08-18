@@ -72,7 +72,7 @@ class MealDetailRepositoryTest {
 
         int quantity = 123;
         int calory = 2323;
-        int foodId = 9999;
+        String foodId = "test-099";
         int bSugar = 789;
         String foodImageUrl = "http://errwr.com";
         String foodName = "test";
@@ -94,7 +94,7 @@ class MealDetailRepositoryTest {
         mealDetail.setMeal(saved);
         mealDetail.setQuantity(quantity);
         mealDetail.setCalorie(calory);
-        mealDetail.setFoodId(Long.valueOf(foodId));
+        mealDetail.setFoodId(foodId);
         mealDetail.setBloodSugar(bSugar);
         mealDetail.setImageUrl(foodImageUrl);
         mealDetail.setFoodName(foodName);

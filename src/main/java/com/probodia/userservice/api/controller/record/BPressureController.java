@@ -9,6 +9,7 @@ import com.probodia.userservice.api.vo.BPressureUpdateVO;
 import com.probodia.userservice.api.vo.BPressureVO;
 import com.probodia.userservice.api.vo.RecordDeleteRequest;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/record/pressure")
 @Slf4j
+@Api(value = "Blood Pressure Controller", description = "혈압 기과 관련된 API")
 public class BPressureController {
 
     private BpressureService bPressureService;

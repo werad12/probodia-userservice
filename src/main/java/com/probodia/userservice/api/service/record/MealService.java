@@ -45,7 +45,6 @@ public class MealService {
         setRecordBase(meal,user,timeTag,recordDate);
 
         return meal;
-
     }
 
     public MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {

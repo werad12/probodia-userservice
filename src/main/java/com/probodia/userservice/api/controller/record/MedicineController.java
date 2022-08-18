@@ -6,6 +6,7 @@ import com.probodia.userservice.api.service.record.MedicineService;
 import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.*;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/record/medicine")
 @Slf4j
+@Api(value = "Medicine Controller", description = "투약 기록과 관련된 API")
 public class MedicineController {
 
     private MedicineService medicineService;

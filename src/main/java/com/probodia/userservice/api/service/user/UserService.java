@@ -27,7 +27,6 @@ import java.util.Map;
 public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final Environment env;
 
     public User getUser(String userId) {

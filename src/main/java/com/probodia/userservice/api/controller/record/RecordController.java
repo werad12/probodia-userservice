@@ -8,6 +8,7 @@ import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.*;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import com.probodia.userservice.utils.PageInfoUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/record")
 @Slf4j
+@Api(value = "Record Controller", description = "사용자 건강 기록 조회와 관련된 API")
 public class RecordController {
 
     private RecordService recordService;

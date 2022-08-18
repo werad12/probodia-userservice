@@ -42,7 +42,7 @@ public class MealDetail {
     private Integer quantity;
 
     @Column(name = "FOOD_ID")
-    private Long foodId;
+    private String foodId;
 
     @ManyToOne
     @JoinColumn(name = "MEAL_ID", insertable = false,

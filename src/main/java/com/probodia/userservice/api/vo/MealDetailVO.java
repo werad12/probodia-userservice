@@ -33,8 +33,8 @@ public class MealDetailVO {
     private Integer quantity;
 
 
-    @ApiModelProperty(value = "음식 ID", required = true,example = "123")
-    private Long foodId;
+    @ApiModelProperty(value = "음식 ID", required = true,example = "123-abc")
+    private String foodId;
 
 
 

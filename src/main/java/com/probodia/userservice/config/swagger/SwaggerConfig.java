@@ -36,8 +36,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Practice Swagger")
-                .description("practice swagger config")
+                .title("Probodia User-Service Swagger")
+                .description("유저 로그인, 건강 기록을 담당한다.")
                 .version("1.0")
                 .build();
     }

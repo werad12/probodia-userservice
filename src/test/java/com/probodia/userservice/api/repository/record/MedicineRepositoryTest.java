@@ -5,6 +5,7 @@ import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.record.Medicine;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
+import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.testutil.BeforeEachMethod;
@@ -31,6 +32,7 @@ class MedicineRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+
 
     String userid;
 
