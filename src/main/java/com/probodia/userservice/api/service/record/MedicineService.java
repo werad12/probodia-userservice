@@ -34,10 +34,10 @@ public class MedicineService {
         record.setTimeTag(TimeTagCode.findByValue(timeTag));
 
     }
-    public MedicineResponseVO saveMedicine(MedicineVO requestRecord, String timeTag, String recordDate, User user) {
+    public MedicineResponseVO saveMedicine(MedicineVO requestRecord, User user) {
 
         Medicine medicine = new Medicine();
-        setRecordBase(medicine,user,timeTag,recordDate);
+        setRecordBase(medicine,user, requestRecord.getTimeTag(), requestRecord.getRecordDate());
         if(requestRecord.getMedicineId()!=null)
             medicine.setMedicineId(requestRecord.getMedicineId());
 

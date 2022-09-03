@@ -40,9 +40,6 @@ class BpressureServiceTest {
     @MockBean(name = "tokenProvider")
     AuthTokenProvider tokenProvider;
 
-//    @Autowired
-//    BPressureRepository bPressureRepository;
-
     @Test
     void savePressure() {
         log.info("A");

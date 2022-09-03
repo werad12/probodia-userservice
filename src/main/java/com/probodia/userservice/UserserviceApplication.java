@@ -2,6 +2,7 @@ package com.probodia.userservice;
 
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.config.properties.CorsProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
 })
 @EnableJpaAuditing
 @EnableDiscoveryClient
+@Slf4j
 public class UserserviceApplication {
 
     public static void main(String[] args) {

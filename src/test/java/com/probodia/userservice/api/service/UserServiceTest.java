@@ -28,14 +28,6 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
-    @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    RestTemplate restTemplate;
-
-    @MockBean
-    Environment env;
 
 //    @Autowired
 //    UserRepository userRepository;
