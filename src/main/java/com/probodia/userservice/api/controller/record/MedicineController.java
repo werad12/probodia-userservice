@@ -79,6 +79,7 @@ public class MedicineController {
     public ResponseEntity<Long> deleteMedicineRecord(@RequestHeader(value = "Authorization")String token,
                                                      @Valid @RequestBody RecordDeleteRequest request){
 
+        //수정
         //user 찾기
         User user = getUserByToken(token);
 
