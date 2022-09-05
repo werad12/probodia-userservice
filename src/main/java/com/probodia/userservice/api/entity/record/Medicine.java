@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,16 +22,12 @@ import javax.validation.constraints.Size;
 @Table(name = "MEDICINE")
 public class Medicine extends Records{
 
-    @Column(name = "MEDICINE_NAME")
-    @Size(max = 50)
-    @NotNull
-    private String medicineName;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEDICINE_ID")
-    private String medicineId;
+    private Long id;
 
-    @Column(name = "MEDICINE_CNT")
-    @NotNull
-    private Integer medicineCnt;
-
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "MEDICINE_ID")
+    Set<MedicineDetail> medicineDetails = new HashSet<>();
 }

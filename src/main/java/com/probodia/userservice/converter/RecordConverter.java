@@ -8,13 +8,7 @@ import java.util.List;
 
 public class RecordConverter {
 
-    public static MedicineResponseVO convertMedicine(Medicine saved){
-        return MedicineResponseVO.builder().medicineId(saved.getMedicineId())
-                .recordDate(saved.getRecordDate())
-                .recordId(saved.getId()).medicineCnt(saved.getMedicineCnt())
-                .medicineName(saved.getMedicineName()).timeTag(saved.getTimeTag().getValue())
-                .build();
-    }
+
 
     public static BPressureResponse bPressureConvert(BPressure bPressure){
         return
@@ -56,5 +50,24 @@ public class RecordConverter {
                 .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
                 .quantity(saved.getQuantity())
                 .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
+    }
+
+    public static MedicineResponseVO convertMedicine(Medicine saved){
+        List<MedicineDetailResponseVO> detailConverted = new ArrayList<>();
+        saved.getMedicineDetails().stream().forEach(s -> detailConverted.add(medicineDetailConvert(s)));
+
+        return MedicineResponseVO.builder().recordId(saved.getId())
+                .medicineDetails(detailConverted)
+                .timeTag(saved.getTimeTag().getValue())
+                .recordDate(saved.getRecordDate())
+                .build();
+    }
+
+    private static MedicineDetailResponseVO medicineDetailConvert(MedicineDetail saved){
+        return MedicineDetailResponseVO.builder().medicineDetailId(saved.getId())
+                .medicineCnt(saved.getMedicineCnt())
+                .medicineName(saved.getMedicineName())
+                .medicineId(saved.getMedicineId())
+                .build();
     }
 }

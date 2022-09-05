@@ -1,11 +1,9 @@
 package com.probodia.userservice.api.repository.record;
 
-import com.probodia.userservice.api.entity.record.MealDetail;
+import com.probodia.userservice.api.entity.record.MedicineDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface MealDetailRepository extends JpaRepository<MealDetail,Long> {
-
+public interface MedicineDetailRepository extends JpaRepository<MedicineDetail, Long> {
 }

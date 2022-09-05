@@ -9,8 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
-@ApiModel(value = "투약 기록 상세 모델")
+@ApiModel(value = "투약 기록 모델")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -27,18 +28,8 @@ public class MedicineVO {
     @Size(max = 10, message="Time tag not be more than 10 characters")
     private String timeTag;
 
-
-    @ApiModelProperty(value = "하루 투약 횟수", required = true,example = "145")
-    @NotNull(message = "Record content cannot be null")
-    private Integer medicineCnt;
-
-    @ApiModelProperty(value = "약 이름",required = true,example = "센트롬")
-    @Size(max = 50, message = "Medicine name not be more than 50 characters")
-    @NotNull(message = "Medicine name cannot be null")
-    private String medicineName;
-
-    @ApiModelProperty(value = "약 ID",example = "FP1234")
-    private String medicineId;
-
+    @ApiModelProperty(value = "종류에 따른 음식의 정보", required = true)
+    @NotNull(message = "Meal Detail cannot be null")
+    private List<MedicineDetailVO> medicineDetails;
 
 }

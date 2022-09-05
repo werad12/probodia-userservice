@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(value = "투약 기록 응답")
 @Getter
@@ -21,14 +22,6 @@ public class MedicineResponseVO {
     @ApiModelProperty(value = "시간 태그",example = "아침")
     private String timeTag;
 
-    @ApiModelProperty(value = "하루 투약 횟수", example = "145")
-    private Integer medicineCnt;
-
-    @ApiModelProperty(value = "약 이름",example = "센트롬")
-    private String medicineName;
-
-    @ApiModelProperty(value = "약 ID",example = "FP1234")
-    private String medicineId;
 
     @ApiModelProperty(value = "Record ID",example = "123123")
     private Long recordId;
@@ -36,5 +29,9 @@ public class MedicineResponseVO {
     @ApiModelProperty(value = "기록 시간", example = "2017-11-12 13:11:34")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String recordDate;
+
+    @ApiModelProperty(value = "투약 기록 정보", required = true)
+    private List<MedicineDetailResponseVO> medicineDetails;
+
 
 }

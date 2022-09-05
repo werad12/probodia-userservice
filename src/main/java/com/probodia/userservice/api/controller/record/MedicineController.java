@@ -41,20 +41,19 @@ public class MedicineController {
 
     @PostMapping
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
-    public ResponseEntity<List<MedicineResponseVO>> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                                       @Valid @RequestBody List<MedicineVO> requestRecord){
+    public ResponseEntity<MedicineResponseVO> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
+                                                                       @Valid @RequestBody MedicineVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
 
-        List<MedicineResponseVO> ret = new ArrayList<>();
-        //투약 기록 저장
-        for(MedicineVO request : requestRecord){
-            MedicineResponseVO saved = medicineService.saveMedicine(request, user);
-            ret.add(saved);
-        }
+        //투약 데이터 먼저 저장
+        Medicine savedMedicine = medicineService.saveMedicine(user, requestRecord.getTimeTag(), requestRecord.getRecordDate());
 
-        return new ResponseEntity<>(ret, HttpStatus.CREATED);
+        //Medicine detail 저장
+        MedicineResponseVO result = medicineService.saveMedicineDetail(savedMedicine,requestRecord.getMedicineDetails());
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
 

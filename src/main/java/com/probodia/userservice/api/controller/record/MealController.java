@@ -81,7 +81,6 @@ public class MealController {
 
         //user 찾기
         User user = getUserByToken(token);
-        //log.info("user Id : {}",user.getUserId());
 
         //record 찾기
         Optional<Meal> deleteRecord = mealService.findMealByUserAndId(user, request.getRecordId());

@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,6 +33,6 @@ public class Meal extends Records {
 
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "MEAL_ID")
-    private List<MealDetail> mealDetails = new ArrayList<>();
+    private Set<MealDetail> mealDetails = new HashSet<>();
 
 }
