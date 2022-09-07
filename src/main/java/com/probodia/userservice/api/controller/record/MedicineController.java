@@ -50,12 +50,10 @@ public class MedicineController {
         User user = getUserByToken(token);
 
         //투약 데이터 먼저 저장
-        Medicine savedMedicine = medicineService.saveMedicine(user, requestRecord.getTimeTag(), requestRecord.getRecordDate());
-
         //Medicine detail 저장
-        MedicineResponseVO result = medicineService.saveMedicineDetail(savedMedicine,requestRecord.getMedicineDetails());
+        MedicineResponseVO savedMedicine = medicineService.saveMedicine(user, requestRecord);
 
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedMedicine, HttpStatus.CREATED);
     }
 
 

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class BSugarService {
 
     }
 
+    @Transactional
     public BSugarResponse saveSugar(BSugarVO request, User user) {
 
         BSugar bSugar = new BSugar();
@@ -48,6 +50,7 @@ public class BSugarService {
 
 
 
+    @Transactional
     public BSugarResponse updateBSugar(BSugar sugar, BSugarUpdateVO updateVO){
         sugar.setBloodSugar(updateVO.getBloodSugar());
         sugar.setTimeTag(TimeTagCode.findByValue(updateVO.getTimeTag()));
@@ -64,6 +67,7 @@ public class BSugarService {
         return bSugarRepository.findByUserAndId(user,recordId);
     }
 
+    @Transactional
     public Long deleteBSugar(BSugar deleteRecord) {
         bSugarRepository.delete(deleteRecord);
         return deleteRecord.getId();

@@ -41,7 +41,7 @@ public class MealService {
     }
 
     //@Transactional
-    public Meal saveMeal(User user, String timeTag, String recordDate) {
+    private Meal saveMeal(User user, String timeTag, String recordDate) {
 
         Meal meal = new Meal();
         setRecordBase(meal,user,timeTag,recordDate);
@@ -58,7 +58,7 @@ public class MealService {
         return retValue;
     }
 
-    public MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
+    private MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
 
 
         for(MealDetailVO requestDetail : mealDetails){
@@ -102,6 +102,7 @@ public class MealService {
         return mealRepository.findByUserAndId(user,recordId);
     }
 
+    @Transactional
     public Long deleteMeal(Meal meal) {
         Long ret = meal.getId();
         /*
@@ -114,6 +115,7 @@ public class MealService {
         return ret;
     }
 
+    @Transactional
     public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
 
         meal.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));

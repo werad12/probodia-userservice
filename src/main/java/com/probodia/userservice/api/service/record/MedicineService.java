@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,7 +46,7 @@ public class MedicineService {
     }
 
 
-    public Medicine saveMedicine(User user, String timeTag, String recordDate) {
+    private Medicine saveMedicine(User user, String timeTag, String recordDate) {
         Medicine medicine = new Medicine();
         setRecordBase(medicine,user,timeTag,recordDate);
 
@@ -53,7 +54,7 @@ public class MedicineService {
     }
 
 
-    public MedicineResponseVO saveMedicineDetail(Medicine medicine, List<MedicineDetailVO> medicineDetails) {
+    private MedicineResponseVO saveMedicineDetail(Medicine medicine, List<MedicineDetailVO> medicineDetails) {
 
         medicineDetails.stream().forEach(m ->{
             MedicineDetail col = new MedicineDetail();
@@ -75,6 +76,7 @@ public class MedicineService {
         return convertMedicine(savedMedicine);
     }
 
+    @Transactional
     public MedicineResponseVO updateMedicine(Medicine medicine, MedicineUpdateVO requestRecord) {
 
         medicine.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
@@ -100,6 +102,7 @@ public class MedicineService {
         return convertMedicine(saved);
     }
 
+    @Transactional
     public Long deleteMedicine(Medicine medicine) {
         Long ret = medicine.getId();
         medicineRepository.delete(medicine);
@@ -107,5 +110,12 @@ public class MedicineService {
     }
 
 
+    @Transactional
+    public MedicineResponseVO saveMedicine(User user, MedicineVO request) {
 
+        Medicine savedMedicine = saveMedicine(user, request.getTimeTag(), request.getRecordDate());
+        MedicineResponseVO retValue = saveMedicineDetail(savedMedicine, request.getMedicineDetails());
+
+        return retValue;
+    }
 }

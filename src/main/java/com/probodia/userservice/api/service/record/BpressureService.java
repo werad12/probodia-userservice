@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -34,6 +35,8 @@ public class BpressureService {
         record.setTimeTag(TimeTagCode.findByValue(timeTag));
 
     }
+
+    @Transactional
     public BPressureResponse savePressure(BPressureVO request, User user) {
 
         BPressure bPressure = new BPressure();
@@ -48,6 +51,7 @@ public class BpressureService {
 
 
 
+    @Transactional
     public BPressureResponse updateBPressure(BPressure bPressure, BPressureUpdateVO requestRecord) {
         bPressure.setMinBloodPressure(requestRecord.getMinBloodPressure());
         bPressure.setMaxBloodPressure(requestRecord.getMaxBloodPressure());
@@ -63,6 +67,7 @@ public class BpressureService {
         return bPressureRepository.findByUserAndId(user,recordId);
     }
 
+    @Transactional
     public Long deleteBPressure(BPressure deleteRecord) {
         bPressureRepository.delete(deleteRecord);
         return deleteRecord.getId();
