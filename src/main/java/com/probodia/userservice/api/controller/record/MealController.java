@@ -73,7 +73,7 @@ public class MealController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{recordId}")
     @ApiOperation(value = "음식 기록 삭제", notes = "음식 기록을 삭제한다.")
     public ResponseEntity<Long> deleteMeal(@RequestHeader(value = "Authorization")String token,
                                            @PathVariable(name = "recordId") @ApiParam(value = "페이지 번호", required = true,example = "12")
