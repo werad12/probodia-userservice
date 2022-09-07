@@ -8,6 +8,7 @@ import com.probodia.userservice.api.vo.*;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -77,14 +79,14 @@ public class MedicineController {
     @DeleteMapping
     @ApiOperation(value = "투약 기록 삭제", notes = "투약 기록을 삭제한다.")
     public ResponseEntity<Long> deleteMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                     @Valid @RequestBody RecordDeleteRequest request){
+                                                     @PathVariable(name = "recordId") @ApiParam(value = "페이지 번호", required = true,example = "12")
+                                                     @NotNull(message = "Record Id cannot be null")Long recordId){
 
-        //수정
         //user 찾기
         User user = getUserByToken(token);
 
         //record 찾기
-        Optional<Medicine> deleteRecord = medicineService.findMedicineByUserAndId(user, request.getRecordId());
+        Optional<Medicine> deleteRecord = medicineService.findMedicineByUserAndId(user, recordId);
         if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
         return new ResponseEntity<>(medicineService.deleteMedicine(deleteRecord.get()),HttpStatus.OK);

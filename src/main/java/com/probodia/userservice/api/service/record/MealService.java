@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,12 +40,22 @@ public class MealService {
 
     }
 
+    //@Transactional
     public Meal saveMeal(User user, String timeTag, String recordDate) {
 
         Meal meal = new Meal();
         setRecordBase(meal,user,timeTag,recordDate);
 
         return meal;
+    }
+
+    @Transactional
+    public MealResponseVO saveMeal(User user,MealVO request){
+
+        Meal savedMeal = saveMeal(user, request.getTimeTag(), request.getRecordDate());
+        MealResponseVO retValue = saveMealDetail(savedMeal, request.getMealDetails());
+
+        return retValue;
     }
 
     public MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
@@ -55,6 +66,9 @@ public class MealService {
 
             col.setFoodName(requestDetail.getFoodName());
             col.setQuantity(requestDetail.getQuantity());
+
+//            if(requestDetail.getFoodName().equals("오류"))
+//                throw new IllegalArgumentException("오류 발생!");
 
             if(requestDetail.getCalories() != null){
                 col.setCalorie(requestDetail.getCalories());

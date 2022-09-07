@@ -11,6 +11,7 @@ import com.probodia.userservice.api.vo.RecordDeleteRequest;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -48,13 +50,10 @@ public class MealController {
         //user 찾기
         User user = getUserByToken(token);
         //Meal 데이터 먼저 저장
-        Meal savedMeal = mealService.saveMeal(user, requestRecord.getTimeTag(),requestRecord.getRecordDate());
-
         //Meal Detail 저장 + Meal 데이터 일부 수정
-        MealResponseVO result = mealService.saveMealDetail(savedMeal, requestRecord.getMealDetails());
+        MealResponseVO savedMeal = mealService.saveMeal(user, requestRecord);
 
-
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedMeal, HttpStatus.CREATED);
     }
     
     @PutMapping
@@ -77,13 +76,14 @@ public class MealController {
     @DeleteMapping
     @ApiOperation(value = "음식 기록 삭제", notes = "음식 기록을 삭제한다.")
     public ResponseEntity<Long> deleteMeal(@RequestHeader(value = "Authorization")String token,
-                                           @Valid @RequestBody RecordDeleteRequest request){
+                                           @PathVariable(name = "recordId") @ApiParam(value = "페이지 번호", required = true,example = "12")
+                                           @NotNull(message = "Record Id cannot be null")Long recordId){
 
         //user 찾기
         User user = getUserByToken(token);
 
         //record 찾기
-        Optional<Meal> deleteRecord = mealService.findMealByUserAndId(user, request.getRecordId());
+        Optional<Meal> deleteRecord = mealService.findMealByUserAndId(user, recordId);
         log.info("delete Record : {}",deleteRecord);
         if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
