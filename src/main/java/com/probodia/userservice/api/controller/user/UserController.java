@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
-    public ResponseEntity<UserInfoVO> getUserInfo(@RequestBody @ApiParam(value = "유저 ID", required = true,example = "123123")
+    public ResponseEntity<UserInfoVO> getUserInfo(@RequestHeader(value = "userId") @ApiParam(value = "유저 ID", required = true,example = "123123")
                                                       @NotNull(message = "User Id cannot be null")Long userId) {
         //user 찾기
         User user = getUser(String.valueOf(userId));

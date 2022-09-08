@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static com.probodia.userservice.converter.RecordConverter.mealConvert;
 
@@ -115,29 +113,38 @@ public class MealService {
         return ret;
     }
 
+    private void deleteDetailByRecord(Meal meal){
+        mealDetailRepository.deleteByMeal(meal);
+    }
+
     @Transactional
     public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
 
         meal.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         meal.setRecordDate(requestRecord.getRecordDate());
-        for(MealDetailUpdateVO detail : requestRecord.getMealDetails()){
-            Optional<MealDetail> detailEntity =
-                    mealDetailRepository.findById(detail.getMealDetailId());
-            if(detailEntity.isEmpty())
-                throw new NoSuchElementException("Not found Meal Detail matched by mealDetailId");
 
-            MealDetail updateTarget = detailEntity.get();
-            updateTarget.setQuantity(detail.getQuantity());
-            updateTarget.setFoodName(detail.getFoodName());
-            updateTarget.setCalorie(detail.getCalories());
-            updateTarget.setImageUrl(detail.getImageUrl());
-            updateTarget.setBloodSugar(detail.getBloodSugar());
-            updateTarget.setFoodId(detail.getFoodId());
+        deleteDetailByRecord(meal);
 
-            mealDetailRepository.save(updateTarget);
+        Set<MealDetail> mealDetails = new HashSet<>();
+
+        for(MealDetailVO m : requestRecord.getMealDetails()){
+            MealDetail detail = new MealDetail();
+            detail.setQuantity(m.getQuantity());
+            detail.setFoodName(m.getFoodName());
+            detail.setCalorie(m.getCalories());
+            detail.setImageUrl(m.getImageUrl());
+            detail.setBloodSugar(m.getBloodSugar());
+            detail.setFoodId(m.getFoodId());
+
+            mealDetailRepository.save(detail);
+            mealDetails.add(detail);
+
         }
 
+        meal.setMealDetails(mealDetails);
+
         Meal saved = mealRepository.save(meal);
+
 
         return mealConvert(saved);
     }

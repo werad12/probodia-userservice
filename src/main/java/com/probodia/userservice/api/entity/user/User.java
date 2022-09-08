@@ -1,6 +1,7 @@
 package com.probodia.userservice.api.entity.user;
 
 import com.probodia.userservice.api.entity.base.BaseTime;
+import com.probodia.userservice.api.entity.enums.base.DiabeteCode;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -78,6 +79,12 @@ public class User extends BaseTime {
     @Column(name = "HEIGHT")
     private Integer height;
 
+    @Column(name = "AGE")
+    private Integer age;
+
+    @Column(name = "DIABETE_CODE")
+    private DiabeteCode diabeteCode;
+
     @Column(name = "SEX", length = 1)
     @Size(min = 1,max = 1)
     private String sex;
@@ -103,6 +110,8 @@ public class User extends BaseTime {
         this.weight = null;
         this.height = null;
         this.sex = null;
+        this.age = null;
+        this.diabeteCode = null;
 
     }
 }

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class MealDetailUpdateVO {
 
     @ApiModelProperty(value = "음식 상세 ID", required = true,example = "123123")
-    @NotNull(message = "Food detail Id cannot be null")
+    //@NotNull(message = "Food detail Id cannot be null")
     private Long mealDetailId;
 
     @ApiModelProperty(value = "음식 수량(그램)", required = true,example = "123")

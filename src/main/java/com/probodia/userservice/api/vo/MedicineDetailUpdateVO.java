@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class MedicineDetailUpdateVO {
 
     @ApiModelProperty(value = "투약 상세 ID", required = true,example = "123123")
-    @NotNull(message = "Medicine detail Id cannot be null")
+    //@NotNull(message = "Medicine detail Id cannot be null")
     private Long medicineDetailId;
 
     @ApiModelProperty(value = "하루 투약 횟수", required = true,example = "145")

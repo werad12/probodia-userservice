@@ -57,7 +57,7 @@ public class MedicineController {
     }
 
 
-    @PutMapping
+    @PostMapping("/update")
     @ApiOperation(value = "투약 기록 수정", notes = "투약 기록을 수정한다.")
     public ResponseEntity<MedicineResponseVO> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
                                                                  @Valid @RequestBody MedicineUpdateVO requestRecord){

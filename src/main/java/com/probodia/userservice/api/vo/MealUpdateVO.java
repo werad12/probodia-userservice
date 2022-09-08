@@ -24,8 +24,6 @@ public class MealUpdateVO {
     @NotNull(message = "Record Id cannot be null")
     private Long recordId;
 
-
-
     @ApiModelProperty(value = "시간 태그", required = true,example = "아침")
     @NotNull(message = "Time tag cannot be null")
     @Size(max = 10, message="Time tag not be more than 10 charaters")
@@ -33,7 +31,7 @@ public class MealUpdateVO {
 
     @ApiModelProperty(value = "종류에 따른 음식의 정보", required = true)
     @NotNull(message = "Meal Detail cannot be null")
-    private List<MealDetailUpdateVO> mealDetails;
+    private List<MealDetailVO> mealDetails;
     @ApiModelProperty(value = "기록 시간", example = "2017-11-12 13:11:34")
     @NotNull(message = "Record time cannot be null")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

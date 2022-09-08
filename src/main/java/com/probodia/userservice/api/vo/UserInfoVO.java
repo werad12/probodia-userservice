@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.vo;
 
+import com.probodia.userservice.api.entity.enums.base.DiabeteCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -29,6 +30,11 @@ public class UserInfoVO {
     @ApiModelProperty(value = "성별", required = true,example = "M")
     private String sex;
 
+    @ApiModelProperty(value = "당뇨 코드", required = true,example = "2형 당뇨")
+    private DiabeteCode diabeteCode;
+
+    @ApiModelProperty(value = "나이", required = true,example = "16")
+    private Integer age;
 
 
 }

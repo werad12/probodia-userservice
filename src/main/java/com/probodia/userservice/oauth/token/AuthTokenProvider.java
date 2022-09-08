@@ -55,14 +55,14 @@ public class AuthTokenProvider {
         if(authToken.validate()) {
 
             Claims claims = authToken.getTokenClaims();
-            log.info("CLAIM SUBJECT : {}",claims.getSubject());
-            log.info("CLAIM : {}",claims.get(AUTHORITIES_KEY));
+//            log.info("CLAIM SUBJECT : {}",claims.getSubject());
+//            log.info("CLAIM : {}",claims.get(AUTHORITIES_KEY));
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-            log.debug("claims subject := [{}]", claims.getSubject());
+//            log.debug("claims subject := [{}]", claims.getSubject());
             User principal = new User(claims.getSubject(), "", authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);

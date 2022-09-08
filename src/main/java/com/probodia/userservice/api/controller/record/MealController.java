@@ -56,7 +56,7 @@ public class MealController {
         return new ResponseEntity<>(savedMeal, HttpStatus.CREATED);
     }
     
-    @PutMapping
+    @PostMapping("/update")
     @ApiOperation(value = "음식 기록 수정", notes = "음식 기록을 수정한다.")
     public ResponseEntity<MealResponseVO> updateMeal(@RequestHeader(value = "Authorization")String token,
                                                      @Valid @RequestBody MealUpdateVO requestRecord){

@@ -1,6 +1,7 @@
 package com.probodia.userservice.api.service.user;
 
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
+import com.probodia.userservice.api.entity.enums.base.DiabeteCode;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.user.UserRepository;
 import com.probodia.userservice.api.vo.UserInfoRequestVO;
@@ -119,11 +120,22 @@ public class UserService {
             user.setProfileImageUrl(request.getProfileImageUrl());
         }
 
+        if(request.getAge()!=null){
+            log.info("age : {}",request.getAge());
+            user.setAge(request.getAge());
+        }
+
+        if(request.getDiabeteCode()!=null){
+
+            user.setDiabeteCode(DiabeteCode.findByValue(request.getDiabeteCode()));
+        }
+
         userRepository.save(user);
 
         return UserInfoVO.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
+                .diabeteCode(user.getDiabeteCode()).age(user.getAge())
                 .build();
     }
 }

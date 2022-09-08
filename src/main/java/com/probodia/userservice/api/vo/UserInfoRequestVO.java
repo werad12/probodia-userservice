@@ -30,5 +30,10 @@ public class UserInfoRequestVO {
     @ApiModelProperty(value = "성별", required = true,example = "M")
     private String sex;
 
+    @ApiModelProperty(value = "당뇨 코드", required = true,example = "2형 당뇨")
+    private String diabeteCode;
+
+    @ApiModelProperty(value = "나이", required = true,example = "16")
+    private Integer age;
 
 }

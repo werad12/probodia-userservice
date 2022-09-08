@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static com.probodia.userservice.converter.RecordConverter.*;
 import static com.probodia.userservice.converter.RecordConverter.convertMedicine;
@@ -76,26 +74,32 @@ public class MedicineService {
         return convertMedicine(savedMedicine);
     }
 
+    private void deleteDetailByRecordId(Medicine medicine){
+        medicineDetailRepository.deleteByMedicine(medicine);
+    }
+
     @Transactional
     public MedicineResponseVO updateMedicine(Medicine medicine, MedicineUpdateVO requestRecord) {
 
         medicine.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         medicine.setRecordDate(requestRecord.getRecordDate());
 
+        deleteDetailByRecordId(medicine);
+
+        Set<MedicineDetail> medicineDetails = new HashSet<>();
+
         requestRecord.getMedicineDetails().stream().forEach(m ->{
-            Optional<MedicineDetail> detailEntity =
-                    medicineDetailRepository.findById(m.getMedicineDetailId());
-            if(detailEntity.isEmpty())
-                throw new NoSuchElementException("Not found Medicine Detail matched by medicineDetailId");
+            MedicineDetail detail = new MedicineDetail();
+            detail.setMedicineId(m.getMedicineId());
+            detail.setMedicineCnt(m.getMedicineCnt());
+            detail.setMedicineName(m.getMedicineName());
+            detail.setMedicine(medicine);
 
-            MedicineDetail updateTarget = detailEntity.get();
-            updateTarget.setMedicineId(m.getMedicineId());
-            updateTarget.setMedicineCnt(m.getMedicineCnt());
-            updateTarget.setMedicineName(m.getMedicineName());
-
-            medicineDetailRepository.save(updateTarget);
-
+            medicineDetailRepository.save(detail);
+            medicineDetails.add(detail);
         });
+
+        medicine.setMedicineDetails(medicineDetails);
 
         Medicine saved = medicineRepository.save(medicine);
 

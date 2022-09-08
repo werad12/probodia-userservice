@@ -34,6 +34,6 @@ public class MedicineUpdateVO {
 
     @ApiModelProperty(value = "투약 상세 정보", required = true)
     @NotNull(message = "Meal Detail cannot be null")
-    private List<MedicineDetailUpdateVO> medicineDetails;
+    private List<MedicineDetailVO> medicineDetails;
 
 }

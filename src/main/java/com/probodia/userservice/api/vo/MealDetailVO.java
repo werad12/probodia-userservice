@@ -35,8 +35,5 @@ public class MealDetailVO {
 
     @ApiModelProperty(value = "음식 ID", required = true,example = "123-abc")
     private String foodId;
-
-
-
-
+    
 }
