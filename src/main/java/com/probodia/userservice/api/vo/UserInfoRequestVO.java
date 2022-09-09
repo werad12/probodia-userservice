@@ -36,4 +36,6 @@ public class UserInfoRequestVO {
     @ApiModelProperty(value = "나이", required = true,example = "16")
     private Integer age;
 
+
+
 }

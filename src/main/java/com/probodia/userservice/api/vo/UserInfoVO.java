@@ -36,5 +36,7 @@ public class UserInfoVO {
     @ApiModelProperty(value = "나이", required = true,example = "16")
     private Integer age;
 
+    @ApiModelProperty(value = "유저 이름", required = true,example = "박서진")
+    private String username;
 
 }
