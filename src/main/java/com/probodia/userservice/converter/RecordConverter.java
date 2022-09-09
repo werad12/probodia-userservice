@@ -48,7 +48,7 @@ public class RecordConverter {
     private static MealDetailResponseVO mealDetailConvert(MealDetail saved){
         return MealDetailResponseVO.builder().mealDetailId(saved.getId())
                 .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
-                .quantity(saved.getQuantity())
+                .quantity(saved.getQuantity()).foodId(saved.getFoodId())
                 .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
     }
 

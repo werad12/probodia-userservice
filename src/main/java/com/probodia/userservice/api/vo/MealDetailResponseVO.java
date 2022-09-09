@@ -34,4 +34,8 @@ public class MealDetailResponseVO {
     @NotNull(message = "Food name cannot be null")
     private String foodName;
 
+    @ApiModelProperty(value = "음식 ID", required = true,example = "D000-123")
+    @NotNull(message = "Food Id cannot be null")
+    private String foodId;
+
 }
