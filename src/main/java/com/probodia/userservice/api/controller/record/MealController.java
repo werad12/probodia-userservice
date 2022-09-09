@@ -43,7 +43,7 @@ public class MealController {
     }
 
     @PostMapping
-    @ApiOperation(value = "음식 기록 추가", notes = "음식 기록을 추가한다.")
+    @ApiOperation(value = "음식 기록 추가 api", notes = "음식 기록을 추가한다.")
     public ResponseEntity<MealResponseVO> saveMeal(@RequestHeader(value = "Authorization")String token,
                                                    @Valid @RequestBody MealVO requestRecord){
 
