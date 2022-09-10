@@ -1,5 +1,7 @@
 package com.probodia.userservice.api.controller;
 
+import com.probodia.userservice.config.properties.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -14,18 +16,24 @@ import javax.validation.Valid;
 
 @RestController
 @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+@RequiredArgsConstructor
 public class HealthCheckController {
 
     @Value("${server.port}")
     String serverPort;
 
+    private final AppProperties appProperties;
+
 
     @GetMapping("health_check")
     public String healthCheck(){
 
-        return "Server is working on port : "+ serverPort;
+        return "Server is working on port : "+ serverPort +
+                ",Server access token time : "+ appProperties.getAuth().getTokenExpiry();
 
     }
+
+
 
 
     @GetMapping("header_test")

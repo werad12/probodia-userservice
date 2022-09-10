@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @ConfigurationProperties(prefix = "app")
+@RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
 public class AppProperties {
 
     private final Auth auth = new Auth();
