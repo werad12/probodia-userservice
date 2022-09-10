@@ -18,4 +18,8 @@ public class LoginResponseVO {
     @ApiModelProperty(value = "서버 측 refresh token", required = true,example = "1231dsaf23")
     String apiRefreshToken;
 
+    @ApiModelProperty(value = "회원가입인지 아닌지", required = true,example = "true")
+    Boolean isSignUp;
+
+
 }

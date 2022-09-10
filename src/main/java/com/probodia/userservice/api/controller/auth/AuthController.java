@@ -63,11 +63,14 @@ public class AuthController {
         if(!userId.equals(authReqModel.getId()))
             throw new UnAuthorizedException("Invalid User Id");
 
+        Boolean isSignup = false;
+
         //userId로 찾아서 user가 존재하지 않으면 user를 생성한다.
         User user = userService.getUser(userId);
         if(user==null){
+            //이 경우에는 회원가입으로 간주.
             Map<String,String> userInfo = userService.getUserInfo(authReqModel);
-
+            isSignup = true;
             user = userService.createUser(userInfo);
         }
 
@@ -103,6 +106,7 @@ public class AuthController {
         LoginResponseVO ret = new LoginResponseVO();
         ret.setApiAccessToken(token);
         ret.setApiRefreshToken(returnRefreshToken);
+        ret.setIsSignUp(isSignup);
 
 
         return new ResponseEntity<>(ret,HttpStatus.OK);
