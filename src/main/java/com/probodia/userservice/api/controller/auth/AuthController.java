@@ -155,7 +155,7 @@ public class AuthController {
         Date now = new Date();
         AuthToken newAccessToken = tokenProvider.createAuthToken(
                 userId,
-                roleType.getCode(),
+                RoleType.USER.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
