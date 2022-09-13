@@ -4,6 +4,8 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.UserInfoRequestVO;
 import com.probodia.userservice.api.vo.UserInfoVO;
+import com.probodia.userservice.oauth.token.AuthTokenProvider;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import javax.validation.constraints.NotNull;
 public class UserController {
 
     private final UserService userService;
+    private final AuthTokenProvider tokenProvider;
 
     @GetMapping
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
@@ -44,6 +47,14 @@ public class UserController {
         return new ResponseEntity<>(userInfo,HttpStatus.OK);
     }
 
+    @DeleteMapping
+    @ApiOperation(value = "유저 정보 삭제(디버그용).", notes = "회원가입 테스트를 위한 메서드, 추후 삭제 예정")
+    public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization")String token){
+        User user = getUserByToken(token);
+        String userId = userService.deleteUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body(userId);
+    }
+
 
     private User getUser(String userId) {
         User user = userService.getUser(userId);
@@ -52,6 +63,10 @@ public class UserController {
             throw new UsernameNotFoundException("Not found User by userId");
         }
         return user;
+    }
+    private User getUserByToken(String bearerToken){
+
+        return getUser(tokenProvider.getTokenSubject(bearerToken.substring(7)));
     }
 
 }

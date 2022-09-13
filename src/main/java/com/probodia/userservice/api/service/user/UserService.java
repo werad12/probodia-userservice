@@ -143,4 +143,11 @@ public class UserService {
                 .username(user.getUsername())
                 .build();
     }
+
+    @Transactional
+    public String deleteUser(User user) {
+        String userId = user.getUserId();
+        userRepository.delete(user);
+        return userId;
+    }
 }

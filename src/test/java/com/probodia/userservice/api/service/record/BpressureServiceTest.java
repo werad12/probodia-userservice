@@ -17,28 +17,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
+@SpringBootTest(properties = "spring.profiles.active:test")
 @Slf4j
-@ActiveProfiles("test")
 class BpressureServiceTest {
 
     @Autowired
     BpressureService bpressureService;
-
-    @MockBean(name = "bPressureRepository")
-    BPressureRepository bPressureRepository;
-
-    @MockBean(name = "jwtConfig")
-    JwtConfig jwtConfig;
-
-    @MockBean(name = "authController")
-    AuthController authController;
-
-    @MockBean(name = "bPressureController")
-    BPressureController bPressureController;
-
-    @MockBean(name = "tokenProvider")
-    AuthTokenProvider tokenProvider;
 
     @Test
     void savePressure() {

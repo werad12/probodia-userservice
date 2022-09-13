@@ -54,38 +54,38 @@ class MedicineRepositoryTest {
         userRepository.save(user);
 
     }
-    @Test
-    @DisplayName("투약 생성 테스트")
-    void saveTest(){
-        Medicine medicine = new Medicine();
-
-        User user = userRepository.findByUserId(userid);
-
-        String medicineName = "test Medicine";
-        String medicineId = "TEST-001";
-        int quantity = 456;
-        String recordDate = "2017-11-11 12:12:12";
-        TimeTagCode timeTag = TimeTagCode.MORNING_AFTER;
-
-
-        medicine.setUser(user);
-
-        medicine.setRecordDate(recordDate);
-        medicine.setTimeTag(timeTag);
-
-        medicine.setMedicineId(medicineId);
-        medicine.setMedicineName(medicineName);
-        medicine.setMedicineCnt(quantity);
-
-        Medicine saved = medicineRepository.save(medicine);
-
-        assertThat(saved.getMedicineCnt()).isEqualTo(quantity);
-        assertThat(saved.getMedicineId()).isEqualTo(medicineId);
-        assertThat(saved.getMedicineName()).isEqualTo(medicineName);
-
-        assertThat(saved.getRecordDate()).isEqualTo(recordDate);
-        assertThat(saved.getTimeTag()).isEqualTo(timeTag);
-
-    }
+//    @Test
+//    @DisplayName("투약 생성 테스트")
+//    void saveTest(){
+//        Medicine medicine = new Medicine();
+//
+//        User user = userRepository.findByUserId(userid);
+//
+//        String medicineName = "test Medicine";
+//        String medicineId = "TEST-001";
+//        int quantity = 456;
+//        String recordDate = "2017-11-11 12:12:12";
+//        TimeTagCode timeTag = TimeTagCode.MORNING_AFTER;
+//
+//
+//        medicine.setUser(user);
+//
+//        medicine.setRecordDate(recordDate);
+//        medicine.setTimeTag(timeTag);
+//
+//        medicine.setMedicineId(medicineId);
+//        medicine.setMedicineName(medicineName);
+//        medicine.setMedicineCnt(quantity);
+//
+//        Medicine saved = medicineRepository.save(medicine);
+//
+//        assertThat(saved.getMedicineCnt()).isEqualTo(quantity);
+//        assertThat(saved.getMedicineId()).isEqualTo(medicineId);
+//        assertThat(saved.getMedicineName()).isEqualTo(medicineName);
+//
+//        assertThat(saved.getRecordDate()).isEqualTo(recordDate);
+//        assertThat(saved.getTimeTag()).isEqualTo(timeTag);
+//
+//    }
 
 }
