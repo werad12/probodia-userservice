@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,5 +30,6 @@ public class Medicine extends Records{
 
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "MEDICINE_ID")
+    @BatchSize(size = 100)
     Set<MedicineDetail> medicineDetails = new HashSet<>();
 }

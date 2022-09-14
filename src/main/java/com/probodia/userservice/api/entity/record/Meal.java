@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Meal extends Records {
 
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "MEAL_ID")
+    @BatchSize(size = 100)
     private Set<MealDetail> mealDetails = new HashSet<>();
 
 }

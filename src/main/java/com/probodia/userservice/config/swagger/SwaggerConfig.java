@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 //@EnableSwagger2
 //@SuppressWarnings("unchecked")
-@Profile("prod")
+@Profile("!prod")
 //extends WebMvcConfigurationSupport
 public class SwaggerConfig {
     @Bean

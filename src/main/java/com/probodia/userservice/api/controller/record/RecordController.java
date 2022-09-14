@@ -52,6 +52,7 @@ public class RecordController {
                                                               ){
         //user 찾기
         User user = getUserByToken(token);
+
         //user에 따른 레코드 찾기
         Page<Records> pageRecord = recordService.findAllByUser(user,page - 1,size);
         PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());

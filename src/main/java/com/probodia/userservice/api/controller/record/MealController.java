@@ -63,7 +63,7 @@ public class MealController {
 
         //user 찾기
         User user = getUserByToken(token);
-        //음식 기록 저장
+        //음식 기록 찾기
         Optional<Meal> updateRecord = mealService.findMealByUserAndId(user, requestRecord.getRecordId());
         if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
