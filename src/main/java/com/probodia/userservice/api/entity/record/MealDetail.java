@@ -44,7 +44,7 @@ public class MealDetail {
     @Column(name = "FOOD_ID")
     private String foodId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEAL_ID", insertable = false,
     updatable = false)
     @JsonIgnore

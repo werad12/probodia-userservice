@@ -100,7 +100,7 @@ public class UserService {
         return UserInfoVO.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
-                .diabeteCode(user.getDiabeteCode()).age(user.getAge())
+                .diabeteCode(user.getDiabeteCode().getValue()).age(user.getAge())
                 .username(user.getUsername())
                 .build();
     }
@@ -139,7 +139,7 @@ public class UserService {
         return UserInfoVO.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
-                .diabeteCode(user.getDiabeteCode()).age(user.getAge())
+                .diabeteCode(user.getDiabeteCode().getValue()).age(user.getAge())
                 .username(user.getUsername())
                 .build();
     }

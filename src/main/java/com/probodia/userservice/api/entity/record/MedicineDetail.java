@@ -37,7 +37,7 @@ public class MedicineDetail {
     @NotNull
     private Integer medicineCnt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEDICINE_ID", insertable = false,
             updatable = false)
     @JsonIgnore

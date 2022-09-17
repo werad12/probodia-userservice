@@ -16,15 +16,18 @@ import com.probodia.userservice.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,6 +45,16 @@ public class AuthController {
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+
+    @GetMapping("/isCreated")
+    @ApiOperation(value = "로그인 되었는지 확인")
+    public ResponseEntity<Boolean> isCreated(@RequestHeader(value = "userId") @ApiParam(value = "유저 ID", required = true,example = "123123")
+                                                 @NotNull(message = "User Id cannot be null")Long userId){
+
+        String uId = getUser(String.valueOf(userId));
+        if(uId==null) return ResponseEntity.status(HttpStatus.OK).body(false);
+        return ResponseEntity.status(HttpStatus.OK).body(true);
+    }
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인 / 회원가입", notes = "로그인 또는 회원가입")
@@ -180,5 +193,14 @@ public class AuthController {
         }
 
         return new ResponseEntity<>(newAccessToken.getToken(),HttpStatus.OK);
+    }
+
+    private String getUser(String userId) {
+        User user = userService.getUser(userId);
+
+        if(user==null){
+            return null;
+        }
+        return user.getUserId();
     }
 }

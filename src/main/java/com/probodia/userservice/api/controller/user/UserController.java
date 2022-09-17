@@ -24,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final AuthTokenProvider tokenProvider;
 
+
     @GetMapping
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
     public ResponseEntity<UserInfoVO> getUserInfo(@RequestHeader(value = "userId") @ApiParam(value = "유저 ID", required = true,example = "123123")

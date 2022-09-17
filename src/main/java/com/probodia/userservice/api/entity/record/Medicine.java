@@ -28,7 +28,7 @@ public class Medicine extends Records{
     @Column(name = "MEDICINE_ID")
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "MEDICINE_ID")
     @BatchSize(size = 100)
     Set<MedicineDetail> medicineDetails = new HashSet<>();

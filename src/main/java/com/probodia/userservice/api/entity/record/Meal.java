@@ -32,7 +32,7 @@ public class Meal extends Records {
     @Column(name = "TOTAL_IMAGE_URL")
     private String totalImageUrl;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "MEAL_ID")
     @BatchSize(size = 100)
     private Set<MealDetail> mealDetails = new HashSet<>();

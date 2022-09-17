@@ -37,7 +37,7 @@ public class AuthToken {
     }
 
     private String createAuthToken(String id, String role, Date expiry) {
-        log.info("Create Auth Token {} , {}", id,role);
+        log.info("Create Auth Token {} , {}, {}", id,role,key.getEncoded());
         return Jwts.builder()
                 .setSubject(id)
                 .claim(AUTHORITIES_KEY, role)

@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum DiabeteCode implements BaseEnumCode<String>{
 
     DIABETE_CODE_1("1형 당뇨"),
-    DIABETE_CODE_2("2형 당뇨")
+    DIABETE_CODE_2("2형 당뇨"),
+    DIABETE_CODE_3("임신성 당뇨")
     ;
 
     private final String value;

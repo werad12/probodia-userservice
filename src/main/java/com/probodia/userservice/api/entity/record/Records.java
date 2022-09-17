@@ -32,7 +32,7 @@ public class Records extends BaseTime {
     @Column(name = "RECORD_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_SEQ")
     private User user;
 
