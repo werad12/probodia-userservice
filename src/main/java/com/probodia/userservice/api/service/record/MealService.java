@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.probodia.userservice.converter.RecordConverter.mealConvert;
 
 @Service
 @Slf4j
@@ -147,6 +146,27 @@ public class MealService {
 
 
         return mealConvert(saved);
+    }
+
+    private MealResponseVO mealConvert(Meal saved){
+        List<MealDetailResponseVO> detailConverted = new ArrayList<>();
+        for(MealDetail detail : saved.getMealDetails()){
+            detailConverted.add(mealDetailConvert(detail));
+        }
+
+        return MealResponseVO.builder().recordId(saved.getId())
+                .mealDetails(detailConverted)
+                .timeTag(saved.getTimeTag().getValue())
+                .recordDate(saved.getRecordDate())
+                .build();
+
+    }
+
+    private MealDetailResponseVO mealDetailConvert(MealDetail saved){
+        return MealDetailResponseVO.builder().mealDetailId(saved.getId())
+                .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
+                .quantity(saved.getQuantity()).foodId(saved.getFoodId())
+                .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
     }
 
 }

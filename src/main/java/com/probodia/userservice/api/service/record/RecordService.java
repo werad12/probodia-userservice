@@ -6,12 +6,14 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
 import com.probodia.userservice.api.vo.*;
 import com.probodia.userservice.converter.RecordConverter;
+import com.probodia.userservice.utils.PageInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +34,9 @@ public class RecordService {
     public RecordService(RecordRepository recordRepository) {
         this.recordRepository = recordRepository;
     }
-    public List<Records> findAllByUser(User user){
+
+    @Transactional(readOnly = true)
+    public List<RecordLookUpVO> findAllByUser(User user){
         LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
@@ -40,11 +44,13 @@ public class RecordService {
         String endTime = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         log.info("Start time : {}, End time : {}",startTime,endTime);
+        List<Records> records = recordRepository.findAllByUserAndRecordDateBetween(user, startTime, endTime);
 
-        return recordRepository.findAllByUserAndRecordDateBetween(user,startTime,endTime);
+        return getRecordList(records);
     }
 
-    public List<Records> findAllByUserAndDateAndTimeTagAndRecordType(User user, DateAndTimeTagFilterRequestVO request){
+    @Transactional(readOnly = true)
+    public List<RecordLookUpVO> findAllByUserAndDateAndTimeTagAndRecordType(User user, DateAndTimeTagFilterRequestVO request){
 
         List<TimeTagCode> timeTagCodes = new ArrayList<>();
 
@@ -71,19 +77,30 @@ public class RecordService {
         }
 
         log.info("Start time : {}, End time : {}", request.getStartDate(),request.getEndDate());
+        List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(user,
+                request.getStartDate(), request.getEndDate(), request.getFilterType(), timeTagCodes);
 
-        return recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(user,
-                request.getStartDate(), request.getEndDate(),request.getFilterType(), timeTagCodes);
+        return getRecordList(records);
     }
-
-    public Page<Records> findAllByUser(User user, int page, int size) {
+    @Transactional(readOnly = true)
+    public PagingLookUpVO findAllByUser(User user, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return recordRepository.findAllByUserOrderByCreatedDateDesc(pageRequest,user);
+        Page<Records> pageRecord =recordRepository.findAllByUserOrderByCreatedDateDesc(pageRequest,user);
+        PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
+
+        List<Records> records = pageRecord.getContent();
+        List<RecordLookUpVO> retValue = getRecordList(records);
+        return new PagingLookUpVO(retValue,pageInfo);
     }
-
-    public Page<Records> findAllByUser(User user, int page, int size, List<String> filterType) {
+    @Transactional(readOnly = true)
+    public PagingLookUpVO findAllByUser(User user, int page, int size, List<String> filterType) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return recordRepository.findAllByUserAndTypeInOrderByCreatedDateDesc(pageRequest,user,filterType);
+        Page<Records> pageRecord = recordRepository.findAllByUserAndTypeInOrderByCreatedDateDesc(pageRequest,user,filterType);
+        PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
+
+        List<Records> records = pageRecord.getContent();
+        List<RecordLookUpVO> retValue = getRecordList(records);
+        return new PagingLookUpVO(retValue,pageInfo);
     }
 
 
@@ -123,4 +140,66 @@ public class RecordService {
         }
         return retValue;
     }
+
+    private BPressureResponse bPressureConvert(BPressure bPressure){
+        return
+                BPressureResponse.builder()
+                        .heartBeat(bPressure.getHeartBeat())
+                        .maxBloodPressure(bPressure.getMaxBloodPressure())
+                        .minBloodPressure(bPressure.getMinBloodPressure())
+                        .timeTag(bPressure.getTimeTag().getValue())
+                        .recordDate(bPressure.getRecordDate())
+                        .recordId(bPressure.getId())
+                        .build();
+    }
+
+    private BSugarResponse bSugarConvert(BSugar bSugar){
+        return
+                BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
+                        .timeTag(bSugar.getTimeTag().getValue())
+                        .recordId(bSugar.getId())
+                        .recordDate(bSugar.getRecordDate())
+                        .build();
+    }
+
+    private MealResponseVO mealConvert(Meal saved){
+        List<MealDetailResponseVO> detailConverted = new ArrayList<>();
+        for(MealDetail detail : saved.getMealDetails()){
+            detailConverted.add(mealDetailConvert(detail));
+        }
+
+        return MealResponseVO.builder().recordId(saved.getId())
+                .mealDetails(detailConverted)
+                .timeTag(saved.getTimeTag().getValue())
+                .recordDate(saved.getRecordDate())
+                .build();
+
+    }
+
+    private MealDetailResponseVO mealDetailConvert(MealDetail saved){
+        return MealDetailResponseVO.builder().mealDetailId(saved.getId())
+                .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
+                .quantity(saved.getQuantity()).foodId(saved.getFoodId())
+                .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
+    }
+
+    private  MedicineResponseVO convertMedicine(Medicine saved){
+        List<MedicineDetailResponseVO> detailConverted = new ArrayList<>();
+        saved.getMedicineDetails().stream().forEach(s -> detailConverted.add(medicineDetailConvert(s)));
+
+        return MedicineResponseVO.builder().recordId(saved.getId())
+                .medicineDetails(detailConverted)
+                .timeTag(saved.getTimeTag().getValue())
+                .recordDate(saved.getRecordDate())
+                .build();
+    }
+
+    private  MedicineDetailResponseVO medicineDetailConvert(MedicineDetail saved){
+        return MedicineDetailResponseVO.builder().medicineDetailId(saved.getId())
+                .medicineCnt(saved.getMedicineCnt())
+                .medicineName(saved.getMedicineName())
+                .medicineId(saved.getMedicineId())
+                .build();
+    }
+
 }

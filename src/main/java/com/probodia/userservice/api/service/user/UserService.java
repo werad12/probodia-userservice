@@ -3,7 +3,9 @@ package com.probodia.userservice.api.service.user;
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
 import com.probodia.userservice.api.entity.enums.base.DiabeteCode;
 import com.probodia.userservice.api.entity.user.User;
+import com.probodia.userservice.api.repository.record.RecordRepository;
 import com.probodia.userservice.api.repository.user.UserRepository;
+import com.probodia.userservice.api.service.record.RecordService;
 import com.probodia.userservice.api.vo.UserInfoRequestVO;
 import com.probodia.userservice.api.vo.UserInfoVO;
 import com.probodia.userservice.oauth.entity.ProviderType;
@@ -30,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final Environment env;
+    private final RecordRepository recordRepository;
 
     public User getUser(String userId) {
         return userRepository.findByUserId(userId);
@@ -100,7 +103,7 @@ public class UserService {
         return UserInfoVO.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
-                .diabeteCode(user.getDiabeteCode().getValue()).age(user.getAge())
+                .diabeteCode(user.getDiabeteCode()==null? null : user.getDiabeteCode().getValue()).age(user.getAge())
                 .username(user.getUsername())
                 .build();
     }
@@ -147,6 +150,7 @@ public class UserService {
     @Transactional
     public String deleteUser(User user) {
         String userId = user.getUserId();
+        recordRepository.deleteAllByUser(user);
         userRepository.delete(user);
         return userId;
     }

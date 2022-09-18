@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,13 +55,8 @@ public class RecordController {
         User user = getUserByToken(token);
 
         //user에 따른 레코드 찾기
-        Page<Records> pageRecord = recordService.findAllByUser(user,page - 1,size);
-        PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
 
-        List<Records> records = pageRecord.getContent();
-        List<RecordLookUpVO> retValue = recordService.getRecordList(records);
-
-        return new ResponseEntity<>(new PagingLookUpVO(retValue,pageInfo),HttpStatus.OK);
+        return new ResponseEntity<>(recordService.findAllByUser(user,page - 1,size),HttpStatus.OK);
     }
 
     @GetMapping("/getAllFiltered")
@@ -72,24 +68,19 @@ public class RecordController {
         User user = getUserByToken(token);
 
         //user에 따른 레코드 찾기
-        Page<Records> pageRecord = recordService.findAllByUser(user,request.getPage() - 1,request.getSize(),request.getFilterType());
-        PageInfoUtil pageInfo = new PageInfoUtil(request.getPage(),request.getSize(),(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
+        return new ResponseEntity<>(recordService.findAllByUser(user,request.getPage() - 1,request.getSize(),request.getFilterType()),HttpStatus.OK);
 
-        List<Records> records = pageRecord.getContent();
-        List<RecordLookUpVO> retValue = recordService.getRecordList(records);
-
-        return new ResponseEntity<>(new PagingLookUpVO(retValue,pageInfo),HttpStatus.OK);
     }
 
     @GetMapping("/getAllToday")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "오늘의 기록을 가져온다.")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<RecordLookUpVO>> getAllTodayRecords(@RequestHeader(value = "Authorization")String token){
         //user 찾기
         User user = getUserByToken(token);
         //user에 따른 레코드 찾기
-        List<Records> records = recordService.findAllByUser(user);
 
-        return new ResponseEntity<>(recordService.getRecordList(records),HttpStatus.OK);
+        return new ResponseEntity<>(recordService.findAllByUser(user),HttpStatus.OK);
     }
 
     @PostMapping("/getAllByDateAndTimeTag")
@@ -98,10 +89,8 @@ public class RecordController {
                                                                        @Valid @RequestBody DateAndTimeTagFilterRequestVO request){
         //user 찾기
         User user = getUserByToken(token);
-        //user에 따른 레코드 찾기
-        List<Records> records = recordService.findAllByUserAndDateAndTimeTagAndRecordType(user,request);
 
-        return new ResponseEntity<>(recordService.getRecordList(records),HttpStatus.OK);
+        return new ResponseEntity<>(recordService.findAllByUserAndDateAndTimeTagAndRecordType(user,request),HttpStatus.OK);
     }
 
 

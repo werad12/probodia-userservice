@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.probodia.userservice.converter.RecordConverter.bSugarConvert;
 
 @Service
 @Slf4j
@@ -71,6 +70,15 @@ public class BSugarService {
     public Long deleteBSugar(BSugar deleteRecord) {
         bSugarRepository.delete(deleteRecord);
         return deleteRecord.getId();
+    }
+
+    private BSugarResponse bSugarConvert(BSugar bSugar){
+        return
+                BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
+                        .timeTag(bSugar.getTimeTag().getValue())
+                        .recordId(bSugar.getId())
+                        .recordDate(bSugar.getRecordDate())
+                        .build();
     }
 
 }

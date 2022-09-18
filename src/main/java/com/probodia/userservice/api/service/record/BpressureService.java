@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.probodia.userservice.converter.RecordConverter.bPressureConvert;
-
 @Service
 @Slf4j
 public class BpressureService {
@@ -71,5 +69,17 @@ public class BpressureService {
     public Long deleteBPressure(BPressure deleteRecord) {
         bPressureRepository.delete(deleteRecord);
         return deleteRecord.getId();
+    }
+
+    private BPressureResponse bPressureConvert(BPressure bPressure){
+        return
+                BPressureResponse.builder()
+                        .heartBeat(bPressure.getHeartBeat())
+                        .maxBloodPressure(bPressure.getMaxBloodPressure())
+                        .minBloodPressure(bPressure.getMinBloodPressure())
+                        .timeTag(bPressure.getTimeTag().getValue())
+                        .recordDate(bPressure.getRecordDate())
+                        .recordId(bPressure.getId())
+                        .build();
     }
 }

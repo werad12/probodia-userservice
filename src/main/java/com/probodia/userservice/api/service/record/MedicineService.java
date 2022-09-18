@@ -7,10 +7,7 @@ import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MedicineDetailRepository;
 import com.probodia.userservice.api.repository.record.MedicineRepository;
-import com.probodia.userservice.api.vo.MedicineDetailVO;
-import com.probodia.userservice.api.vo.MedicineResponseVO;
-import com.probodia.userservice.api.vo.MedicineUpdateVO;
-import com.probodia.userservice.api.vo.MedicineVO;
+import com.probodia.userservice.api.vo.*;
 import com.probodia.userservice.converter.RecordConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static com.probodia.userservice.converter.RecordConverter.*;
-import static com.probodia.userservice.converter.RecordConverter.convertMedicine;
 
 @Service
 @Slf4j
@@ -121,5 +117,26 @@ public class MedicineService {
         MedicineResponseVO retValue = saveMedicineDetail(savedMedicine, request.getMedicineDetails());
 
         return retValue;
+    }
+
+
+
+    private static MedicineResponseVO convertMedicine(Medicine saved){
+        List<MedicineDetailResponseVO> detailConverted = new ArrayList<>();
+        saved.getMedicineDetails().stream().forEach(s -> detailConverted.add(medicineDetailConvert(s)));
+
+        return MedicineResponseVO.builder().recordId(saved.getId())
+                .medicineDetails(detailConverted)
+                .timeTag(saved.getTimeTag().getValue())
+                .recordDate(saved.getRecordDate())
+                .build();
+    }
+
+    private static MedicineDetailResponseVO medicineDetailConvert(MedicineDetail saved){
+        return MedicineDetailResponseVO.builder().medicineDetailId(saved.getId())
+                .medicineCnt(saved.getMedicineCnt())
+                .medicineName(saved.getMedicineName())
+                .medicineId(saved.getMedicineId())
+                .build();
     }
 }
