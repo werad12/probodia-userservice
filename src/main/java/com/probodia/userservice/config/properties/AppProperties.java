@@ -17,6 +17,7 @@ import java.util.List;
 public class AppProperties {
 
     private final Auth auth = new Auth();
+    private final BloodSugar bloodSugar = new BloodSugar();
     private final OAuth2 oauth2 = new OAuth2();
 
     @Getter
@@ -27,6 +28,17 @@ public class AppProperties {
         private String tokenSecret;
         private long tokenExpiry;
         private long refreshTokenExpiry;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BloodSugar{
+        private int beforeLow;
+        private int beforeHigh;
+        private int afterLow;
+        private int afterHigh;
     }
 
     public static final class OAuth2 {

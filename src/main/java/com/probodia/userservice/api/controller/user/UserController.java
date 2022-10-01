@@ -2,10 +2,9 @@ package com.probodia.userservice.api.controller.user;
 
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.UserInfoRequestVO;
-import com.probodia.userservice.api.vo.UserInfoVO;
+import com.probodia.userservice.api.vo.user.UserInfoRequestVO;
+import com.probodia.userservice.api.vo.user.UserInfoVO;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;

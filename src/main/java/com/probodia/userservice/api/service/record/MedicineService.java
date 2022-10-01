@@ -7,17 +7,13 @@ import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MedicineDetailRepository;
 import com.probodia.userservice.api.repository.record.MedicineRepository;
-import com.probodia.userservice.api.vo.*;
-import com.probodia.userservice.converter.RecordConverter;
+import com.probodia.userservice.api.vo.medicine.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
-import static com.probodia.userservice.converter.RecordConverter.*;
 
 @Service
 @Slf4j

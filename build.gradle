@@ -62,6 +62,9 @@ dependencies {
     //rabbitMq
     implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
+    //feigh client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     //테스트에서 h2 db 사용
     implementation 'com.h2database:h2'
 

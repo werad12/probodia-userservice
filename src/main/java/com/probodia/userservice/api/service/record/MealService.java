@@ -7,8 +7,7 @@ import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MealDetailRepository;
 import com.probodia.userservice.api.repository.record.MealRepository;
-import com.probodia.userservice.api.vo.*;
-import lombok.RequiredArgsConstructor;
+import com.probodia.userservice.api.vo.meal.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,7 @@ public class MealService {
     }
 
     @Transactional
-    public MealResponseVO saveMeal(User user,MealVO request){
+    public MealResponseVO saveMeal(User user, MealVO request){
 
         Meal savedMeal = saveMeal(user, request.getTimeTag(), request.getRecordDate());
         MealResponseVO retValue = saveMealDetail(savedMeal, request.getMealDetails());

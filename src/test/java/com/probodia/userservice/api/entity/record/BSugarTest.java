@@ -2,13 +2,10 @@ package com.probodia.userservice.api.entity.record;
 
 import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
 import com.probodia.userservice.api.entity.user.User;
-import com.probodia.userservice.api.repository.record.BPressureRepository;
 import com.probodia.userservice.api.repository.record.BSugarRepository;
 import com.probodia.userservice.api.repository.user.UserRepository;
-import com.probodia.userservice.api.vo.BSugarResponse;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
-import com.probodia.userservice.testutil.BeforeEachMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 @Slf4j
 @ActiveProfiles("test")

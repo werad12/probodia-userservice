@@ -4,12 +4,13 @@ import com.probodia.userservice.api.entity.record.Medicine;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.MedicineService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.*;
+import com.probodia.userservice.api.vo.medicine.MedicineResponseVO;
+import com.probodia.userservice.api.vo.medicine.MedicineUpdateVO;
+import com.probodia.userservice.api.vo.medicine.MedicineVO;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -44,7 +43,7 @@ public class MedicineController {
     @PostMapping
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
     public ResponseEntity<MedicineResponseVO> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                                       @Valid @RequestBody MedicineVO requestRecord){
+                                                                 @Valid @RequestBody MedicineVO requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);

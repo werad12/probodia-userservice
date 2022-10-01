@@ -1,20 +1,19 @@
 package com.probodia.userservice.api.controller.record;
 
 
-import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.RecordService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.*;
+import com.probodia.userservice.api.vo.recordbase.RecordLookUpVO;
+import com.probodia.userservice.api.vo.recordview.DateAndTimeTagFilterRequestVO;
+import com.probodia.userservice.api.vo.recordview.PagingFilterRequestVO;
+import com.probodia.userservice.api.vo.recordview.PagingLookUpVO;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
-import com.probodia.userservice.utils.PageInfoUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,9 +45,9 @@ public class RecordController {
     @GetMapping("/getAll/{page}/{size}")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
     public ResponseEntity<PagingLookUpVO> getAllRecords(@RequestHeader(value = "Authorization")String token,
-                                                              @PathVariable(name = "page") @ApiParam(value = "페이지 번호", required = true,example = "12")
+                                                        @PathVariable(name = "page") @ApiParam(value = "페이지 번호", required = true,example = "12")
                                                               @NotNull(message = "Page number cannot be null")Integer page,
-                                                              @PathVariable(name = "size") @ApiParam(value = "한 페이지의 사이즈", required = true,example = "123")
+                                                        @PathVariable(name = "size") @ApiParam(value = "한 페이지의 사이즈", required = true,example = "123")
                                                                   @NotNull(message = "Paging size cannot be null")Integer size
                                                               ){
         //user 찾기

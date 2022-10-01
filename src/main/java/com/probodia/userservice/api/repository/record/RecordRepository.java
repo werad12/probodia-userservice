@@ -23,6 +23,8 @@ public interface RecordRepository extends JpaRepository<Records,Long> {
     Page<Records> findAllByUserAndTypeInOrderByCreatedDateDesc(Pageable pageable, User user, List<String> typeList);
     List<Records> findAllByUserAndRecordDateBetween(User user, String start, String end);
 
+    List<Records> findAllByUserAndRecordDateBetweenAndType(User user, String start, String end,String type);
+
     List<Records> findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(User user,
                                                                                                 String start,
                                                                                                 String end,

@@ -4,10 +4,16 @@ import com.probodia.userservice.api.entity.enums.base.TimeTagCode;
 import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.*;
-import com.probodia.userservice.api.vo.*;
-import com.probodia.userservice.converter.RecordConverter;
+import com.probodia.userservice.api.vo.bpressure.BPressureResponse;
+import com.probodia.userservice.api.vo.bsugar.BSugarResponse;
+import com.probodia.userservice.api.vo.meal.MealDetailResponseVO;
+import com.probodia.userservice.api.vo.meal.MealResponseVO;
+import com.probodia.userservice.api.vo.medicine.MedicineDetailResponseVO;
+import com.probodia.userservice.api.vo.medicine.MedicineResponseVO;
+import com.probodia.userservice.api.vo.recordbase.RecordLookUpVO;
+import com.probodia.userservice.api.vo.recordview.DateAndTimeTagFilterRequestVO;
+import com.probodia.userservice.api.vo.recordview.PagingLookUpVO;
 import com.probodia.userservice.utils.PageInfoUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,8 +26,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.probodia.userservice.converter.RecordConverter.*;
 
 @Service
 @Slf4j
@@ -183,7 +187,7 @@ public class RecordService {
                 .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();
     }
 
-    private  MedicineResponseVO convertMedicine(Medicine saved){
+    private MedicineResponseVO convertMedicine(Medicine saved){
         List<MedicineDetailResponseVO> detailConverted = new ArrayList<>();
         saved.getMedicineDetails().stream().forEach(s -> detailConverted.add(medicineDetailConvert(s)));
 

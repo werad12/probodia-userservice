@@ -6,7 +6,7 @@ import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.exception.UnAuthorizedException;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.LoginResponseVO;
+import com.probodia.userservice.api.vo.user.LoginResponseVO;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.oauth.token.AuthToken;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
