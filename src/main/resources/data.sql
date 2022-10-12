@@ -632,6 +632,9 @@ CREATE TABLE `bsugar` (
 
 LOCK TABLES `bsugar` WRITE;
 /*!40000 ALTER TABLE `bsugar` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `bsugar` ENABLE KEYS */;
+UNLOCK TABLES;
 INSERT INTO `bsugar` VALUES
                          (148,91),
                          (157,92),
@@ -813,9 +816,6 @@ INSERT INTO `bsugar` VALUES
                          (144,268),
                          (160,269),
                          (151,270);
-/*!40000 ALTER TABLE `bsugar` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `meal`
 --
