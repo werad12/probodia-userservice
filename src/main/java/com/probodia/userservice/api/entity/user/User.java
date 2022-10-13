@@ -89,6 +89,9 @@ public class User extends BaseTime {
     @Size(min = 1,max = 1)
     private String sex;
 
+    @Column(name = "POINT")
+    private Integer point;
+
     public User(
             @NotNull @Size(max = 64) String userId,
             @NotNull @Size(max = 100) String username,
@@ -112,6 +115,7 @@ public class User extends BaseTime {
         this.sex = null;
         this.age = null;
         this.diabeteCode = null;
+        this.point = 0;
 
     }
 }

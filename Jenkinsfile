@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        BUILD_NUMBER = '1.0.0'
+        BUILD_NUMBER = '1.0.1'
     }
     stages {
         stage('========== Clone repository ==========') {
