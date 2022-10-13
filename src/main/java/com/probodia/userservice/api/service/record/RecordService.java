@@ -84,6 +84,8 @@ public class RecordService {
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(user,
                 request.getStartDate(), request.getEndDate(), request.getFilterType(), timeTagCodes);
 
+        log.info("SIZE : {}", records.size());
+
         return getRecordList(records);
     }
     @Transactional(readOnly = true)

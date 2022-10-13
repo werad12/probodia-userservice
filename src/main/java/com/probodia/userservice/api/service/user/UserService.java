@@ -102,7 +102,7 @@ public class UserService {
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
                 .diabeteCode(user.getDiabeteCode()==null? null : user.getDiabeteCode().getValue()).age(user.getAge())
-                .username(user.getUsername())
+                .username(user.getUsername()).point(user.getPoint())
                 .build();
     }
 

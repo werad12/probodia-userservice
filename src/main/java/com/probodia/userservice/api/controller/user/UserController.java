@@ -8,6 +8,7 @@ import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -30,6 +32,8 @@ public class UserController {
                                                       @NotNull(message = "User Id cannot be null")Long userId) {
         //user 찾기
         User user = getUser(String.valueOf(userId));
+
+//        log.info("USER POINT : {}",user.getPoint());
 
         //user의 정보 가져오기
         UserInfoVO userInfo = userService.getUserInfo(user);

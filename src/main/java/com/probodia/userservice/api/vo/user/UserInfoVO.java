@@ -39,4 +39,9 @@ public class UserInfoVO {
     @ApiModelProperty(value = "유저 이름", required = true,example = "박서진")
     private String username;
 
+    @ApiModelProperty(value = "포인트", required = true,example = "16")
+    private Integer point;
+
+
+
 }
