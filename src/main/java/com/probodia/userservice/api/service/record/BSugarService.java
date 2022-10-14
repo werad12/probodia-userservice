@@ -76,7 +76,7 @@ public class BSugarService {
                 BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
                         .timeTag(bSugar.getTimeTag().getValue())
                         .recordId(bSugar.getId())
-                        .recordDate(bSugar.getRecordDate())
+                        .recordDate(bSugar.getRecordDate()).userId(bSugar.getUser().getUserId())
                         .build();
     }
 

@@ -16,6 +16,10 @@ import java.util.List;
 @Data
 public class MealResponseVO {
 
+
+    @ApiModelProperty(value = "user ID", example = "123123")
+    private String userId;
+
     @ApiModelProperty(value = "음식 ID", required = true,example = "123123")
     private Long recordId;
 

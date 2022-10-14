@@ -177,7 +177,7 @@ public class RecordService {
         return MealResponseVO.builder().recordId(saved.getId())
                 .mealDetails(detailConverted)
                 .timeTag(saved.getTimeTag().getValue())
-                .recordDate(saved.getRecordDate())
+                .recordDate(saved.getRecordDate()).userId(saved.getUser().getUserId())
                 .build();
 
     }

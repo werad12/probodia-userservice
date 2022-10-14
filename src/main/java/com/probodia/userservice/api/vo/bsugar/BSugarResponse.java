@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -14,7 +15,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BSugarResponse {
+public class BSugarResponse implements Serializable {
+
+    static final long serialVersionUID = 112415146L;
+
+    @ApiModelProperty(value = "user ID", example = "123123")
+    private String userId;
 
     @ApiModelProperty(value = "시간 태그",example = "아침")
     private String timeTag;

@@ -7,11 +7,15 @@ import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.vo.meal.MealResponseVO;
 import com.probodia.userservice.api.vo.meal.MealUpdateVO;
 import com.probodia.userservice.api.vo.meal.MealVO;
+import com.probodia.userservice.config.rabbitmq.RabbitMqConfig;
+import com.probodia.userservice.messagequeue.RabbitProducer;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +30,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/record/meal")
 @Slf4j
+@RequiredArgsConstructor
 @Api(value = "Meal Controller", description = "식사 기록과 관련된 API")
 public class MealController {
 
-    private MealService mealService;
-    private UserService userService;
-    private AuthTokenProvider tokenProvider;
+    private final MealService mealService;
+    private final UserService userService;
+    private final AuthTokenProvider tokenProvider;
+    private final RabbitProducer rabbitProducer;
 
-    @Autowired
-    public MealController(MealService mealService, UserService userService, AuthTokenProvider tokenProvider) {
-        this.mealService = mealService;
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-    }
 
     @PostMapping
     @ApiOperation(value = "음식 기록 추가 api", notes = "음식 기록을 추가한다.")
@@ -50,6 +50,9 @@ public class MealController {
         //Meal 데이터 먼저 저장
         //Meal Detail 저장 + Meal 데이터 일부 수정
         MealResponseVO savedMeal = mealService.saveMeal(user, requestRecord);
+
+
+        rabbitProducer.sendFood(savedMeal);
 
         return new ResponseEntity<>(savedMeal, HttpStatus.CREATED);
     }
