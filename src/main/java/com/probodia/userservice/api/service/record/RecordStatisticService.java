@@ -5,6 +5,7 @@ import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MealDetailRepository;
 import com.probodia.userservice.api.repository.record.RecordRepository;
 import com.probodia.userservice.api.vo.food.FoodInfoVO;
+import com.probodia.userservice.api.vo.medicine.MedicineStatisticDetailVO;
 import com.probodia.userservice.api.vo.recordstat.AverageNeutrientVO;
 import com.probodia.userservice.api.vo.recordstat.MedicineStatVO;
 import com.probodia.userservice.api.vo.recordstat.RangeBSugarVO;
@@ -242,22 +243,36 @@ public class RecordStatisticService {
 
         List<Records> medicine = recordRepository.findAllByUserAndRecordDateBetweenAndType(user, stdate, endate, "MEDICINE");
 
-        Map<String,Integer> ret = new HashMap<>();
+        List<MedicineStatisticDetailVO> ret = new ArrayList<>();
+        List<String> set = new ArrayList<>();
+
+        for(Records r : medicine){
+
+            Medicine m = (Medicine) r;
+            Set<MedicineDetail> medicineDetails = m.getMedicineDetails();
+            for(MedicineDetail md : medicineDetails){
+                set.add(md.getMedicineName());
+            }
+        }
+
+        set = set.stream().distinct().collect(Collectors.toList());
+        for(String name : set){
+            ret.add(new MedicineStatisticDetailVO(name, 0));
+        }
+
 
         for(Records r : medicine){
 
             Medicine m = (Medicine) r;
 
-//            log.info("M : {}",m.getId());
-
             Set<MedicineDetail> medicineDetails = m.getMedicineDetails();
+
             for(MedicineDetail md : medicineDetails){
-//                log.info("MD : {}",md.getMedicineId());
-                if(ret.containsKey(md.getMedicineName())){
-                    ret.put(md.getMedicineName(),md.getMedicineCnt() + ret.get(md.getMedicineName()));
+                for(MedicineStatisticDetailVO mvo : ret){
+                    if(mvo.getMedicineName().equals(md.getMedicineName())){
+                        mvo.setMedicineCnt(mvo.getMedicineCnt() + 1);
+                    }
                 }
-                else
-                    ret.put(md.getMedicineName(),md.getMedicineCnt());
             }
 
         }

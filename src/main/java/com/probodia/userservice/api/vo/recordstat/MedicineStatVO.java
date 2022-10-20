@@ -1,8 +1,10 @@
 package com.probodia.userservice.api.vo.recordstat;
 
+import com.probodia.userservice.api.vo.medicine.MedicineStatisticDetailVO;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
+import java.util.List;
 import java.util.Map;
 
 @ApiModel(value = "투약 기록 분석 응답")
@@ -12,5 +14,5 @@ import java.util.Map;
 @NoArgsConstructor
 @Data
 public class MedicineStatVO {
-    Map<String, Integer> recordMedicineList;
+    List<MedicineStatisticDetailVO> medicineList;
 }
