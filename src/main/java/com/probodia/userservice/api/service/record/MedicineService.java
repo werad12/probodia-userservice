@@ -7,7 +7,7 @@ import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MedicineDetailRepository;
 import com.probodia.userservice.api.repository.record.MedicineRepository;
-import com.probodia.userservice.api.vo.medicine.*;
+import com.probodia.userservice.api.dto.medicine.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class MedicineService {
     }
 
 
-    private MedicineResponseVO saveMedicineDetail(Medicine medicine, List<MedicineDetailVO> medicineDetails) {
+    private MedicineResponseDto saveMedicineDetail(Medicine medicine, List<MedicineDetailDto> medicineDetails) {
 
         medicineDetails.stream().forEach(m ->{
             MedicineDetail col = new MedicineDetail();
@@ -71,7 +71,7 @@ public class MedicineService {
     }
 
     @Transactional
-    public MedicineResponseVO updateMedicine(Medicine medicine, MedicineUpdateVO requestRecord) {
+    public MedicineResponseDto updateMedicine(Medicine medicine, MedicineUpdateDto requestRecord) {
 
         medicine.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         medicine.setRecordDate(requestRecord.getRecordDate());
@@ -107,29 +107,29 @@ public class MedicineService {
 
 
     @Transactional
-    public MedicineResponseVO saveMedicine(User user, MedicineVO request) {
+    public MedicineResponseDto saveMedicine(User user, MedicineDto request) {
 
         Medicine savedMedicine = saveMedicine(user, request.getTimeTag(), request.getRecordDate());
-        MedicineResponseVO retValue = saveMedicineDetail(savedMedicine, request.getMedicineDetails());
+        MedicineResponseDto retValue = saveMedicineDetail(savedMedicine, request.getMedicineDetails());
 
         return retValue;
     }
 
 
 
-    private static MedicineResponseVO convertMedicine(Medicine saved){
-        List<MedicineDetailResponseVO> detailConverted = new ArrayList<>();
+    private static MedicineResponseDto convertMedicine(Medicine saved){
+        List<MedicineDetailResponseDto> detailConverted = new ArrayList<>();
         saved.getMedicineDetails().stream().forEach(s -> detailConverted.add(medicineDetailConvert(s)));
 
-        return MedicineResponseVO.builder().recordId(saved.getId())
+        return MedicineResponseDto.builder().recordId(saved.getId())
                 .medicineDetails(detailConverted)
                 .timeTag(saved.getTimeTag().getValue())
                 .recordDate(saved.getRecordDate())
                 .build();
     }
 
-    private static MedicineDetailResponseVO medicineDetailConvert(MedicineDetail saved){
-        return MedicineDetailResponseVO.builder().medicineDetailId(saved.getId())
+    private static MedicineDetailResponseDto medicineDetailConvert(MedicineDetail saved){
+        return MedicineDetailResponseDto.builder().medicineDetailId(saved.getId())
                 .medicineCnt(saved.getMedicineCnt())
                 .medicineName(saved.getMedicineName())
                 .medicineId(saved.getMedicineId())

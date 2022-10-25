@@ -4,10 +4,9 @@ import com.probodia.userservice.api.entity.record.Meal;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.MealService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.meal.MealResponseVO;
-import com.probodia.userservice.api.vo.meal.MealUpdateVO;
-import com.probodia.userservice.api.vo.meal.MealVO;
-import com.probodia.userservice.config.rabbitmq.RabbitMqConfig;
+import com.probodia.userservice.api.dto.meal.MealResponseDto;
+import com.probodia.userservice.api.dto.meal.MealUpdateDto;
+import com.probodia.userservice.api.dto.meal.MealDto;
 import com.probodia.userservice.messagequeue.RabbitProducer;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
@@ -15,8 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,14 +39,14 @@ public class MealController {
 
     @PostMapping
     @ApiOperation(value = "음식 기록 추가 api", notes = "음식 기록을 추가한다.")
-    public ResponseEntity<MealResponseVO> saveMeal(@RequestHeader(value = "Authorization")String token,
-                                                   @Valid @RequestBody MealVO requestRecord){
+    public ResponseEntity<MealResponseDto> saveMeal(@RequestHeader(value = "Authorization")String token,
+                                                    @Valid @RequestBody MealDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
         //Meal 데이터 먼저 저장
         //Meal Detail 저장 + Meal 데이터 일부 수정
-        MealResponseVO savedMeal = mealService.saveMeal(user, requestRecord);
+        MealResponseDto savedMeal = mealService.saveMeal(user, requestRecord);
 
 
         rabbitProducer.sendFood(savedMeal);
@@ -59,8 +56,8 @@ public class MealController {
     
     @PostMapping("/update")
     @ApiOperation(value = "음식 기록 수정", notes = "음식 기록을 수정한다.")
-    public ResponseEntity<MealResponseVO> updateMeal(@RequestHeader(value = "Authorization")String token,
-                                                     @Valid @RequestBody MealUpdateVO requestRecord){
+    public ResponseEntity<MealResponseDto> updateMeal(@RequestHeader(value = "Authorization")String token,
+                                                      @Valid @RequestBody MealUpdateDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -69,7 +66,7 @@ public class MealController {
         if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
         //음식 기록 수정
-        MealResponseVO result = mealService.updateMeal(updateRecord.get(), requestRecord);
+        MealResponseDto result = mealService.updateMeal(updateRecord.get(), requestRecord);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

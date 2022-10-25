@@ -4,9 +4,9 @@ import com.probodia.userservice.api.entity.record.Medicine;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.MedicineService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.medicine.MedicineResponseVO;
-import com.probodia.userservice.api.vo.medicine.MedicineUpdateVO;
-import com.probodia.userservice.api.vo.medicine.MedicineVO;
+import com.probodia.userservice.api.dto.medicine.MedicineResponseDto;
+import com.probodia.userservice.api.dto.medicine.MedicineUpdateDto;
+import com.probodia.userservice.api.dto.medicine.MedicineDto;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,15 +42,15 @@ public class MedicineController {
 
     @PostMapping
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
-    public ResponseEntity<MedicineResponseVO> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @Valid @RequestBody MedicineVO requestRecord){
+    public ResponseEntity<MedicineResponseDto> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
+                                                                  @Valid @RequestBody MedicineDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
 
         //투약 데이터 먼저 저장
         //Medicine detail 저장
-        MedicineResponseVO savedMedicine = medicineService.saveMedicine(user, requestRecord);
+        MedicineResponseDto savedMedicine = medicineService.saveMedicine(user, requestRecord);
 
         return new ResponseEntity<>(savedMedicine, HttpStatus.CREATED);
     }
@@ -58,8 +58,8 @@ public class MedicineController {
 
     @PostMapping("/update")
     @ApiOperation(value = "투약 기록 수정", notes = "투약 기록을 수정한다.")
-    public ResponseEntity<MedicineResponseVO> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @Valid @RequestBody MedicineUpdateVO requestRecord){
+    public ResponseEntity<MedicineResponseDto> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
+                                                                  @Valid @RequestBody MedicineUpdateDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -68,7 +68,7 @@ public class MedicineController {
         if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
         //혈당 기록 수정
-        MedicineResponseVO result = medicineService.updateMedicine(updateRecord.get(), requestRecord);
+        MedicineResponseDto result = medicineService.updateMedicine(updateRecord.get(), requestRecord);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

@@ -2,8 +2,8 @@ package com.probodia.userservice.api.controller.user;
 
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.user.UserInfoRequestVO;
-import com.probodia.userservice.api.vo.user.UserInfoVO;
+import com.probodia.userservice.api.dto.user.UserInfoRequestDto;
+import com.probodia.userservice.api.dto.user.UserInfoDto;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")
-    public ResponseEntity<UserInfoVO> getUserInfo(@RequestHeader(value = "userId") @ApiParam(value = "유저 ID", required = true,example = "123123")
+    public ResponseEntity<UserInfoDto> getUserInfo(@RequestHeader(value = "userId") @ApiParam(value = "유저 ID", required = true,example = "123123")
                                                       @NotNull(message = "User Id cannot be null")Long userId) {
         //user 찾기
         User user = getUser(String.valueOf(userId));
@@ -36,18 +36,18 @@ public class UserController {
 //        log.info("USER POINT : {}",user.getPoint());
 
         //user의 정보 가져오기
-        UserInfoVO userInfo = userService.getUserInfo(user);
+        UserInfoDto userInfo = userService.getUserInfo(user);
         return new ResponseEntity<>(userInfo,HttpStatus.OK);
     }
 
     @PutMapping
     @ApiOperation(value = "유저 정보 기록 수정.", notes = "user id, profile, username을 제외한 모든 정보를 수정할 수 있다.")
-    public ResponseEntity<UserInfoVO> updateUserInfo(@RequestBody UserInfoRequestVO request) {
+    public ResponseEntity<UserInfoDto> updateUserInfo(@RequestBody UserInfoRequestDto request) {
         //user 찾기
         User user = getUser(String.valueOf(request.getUserId()));
 
         //user의 정보 가져오기
-        UserInfoVO userInfo = userService.updateUserInfo(request,user);
+        UserInfoDto userInfo = userService.updateUserInfo(request,user);
         return new ResponseEntity<>(userInfo,HttpStatus.OK);
     }
 

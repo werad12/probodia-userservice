@@ -4,10 +4,10 @@ package com.probodia.userservice.api.controller.record;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.RecordService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.recordbase.RecordLookUpVO;
-import com.probodia.userservice.api.vo.recordview.DateAndTimeTagFilterRequestVO;
-import com.probodia.userservice.api.vo.recordview.PagingFilterRequestVO;
-import com.probodia.userservice.api.vo.recordview.PagingLookUpVO;
+import com.probodia.userservice.api.dto.recordbase.RecordLookUpDto;
+import com.probodia.userservice.api.dto.recordview.DateAndTimeTagFilterRequestDto;
+import com.probodia.userservice.api.dto.recordview.PagingFilterRequestDto;
+import com.probodia.userservice.api.dto.recordview.PagingLookUpDto;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,10 +44,10 @@ public class RecordController {
 
     @GetMapping("/getAll/{page}/{size}")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
-    public ResponseEntity<PagingLookUpVO> getAllRecords(@RequestHeader(value = "Authorization")String token,
-                                                        @PathVariable(name = "page") @ApiParam(value = "페이지 번호", required = true,example = "12")
+    public ResponseEntity<PagingLookUpDto> getAllRecords(@RequestHeader(value = "Authorization")String token,
+                                                         @PathVariable(name = "page") @ApiParam(value = "페이지 번호", required = true,example = "12")
                                                               @NotNull(message = "Page number cannot be null")Integer page,
-                                                        @PathVariable(name = "size") @ApiParam(value = "한 페이지의 사이즈", required = true,example = "123")
+                                                         @PathVariable(name = "size") @ApiParam(value = "한 페이지의 사이즈", required = true,example = "123")
                                                                   @NotNull(message = "Paging size cannot be null")Integer size
                                                               ){
         //user 찾기
@@ -60,8 +60,8 @@ public class RecordController {
 
     @PostMapping("/getAllFiltered")
     @ApiOperation(value = "user Id로 일부 기록을 가져온다.", notes = "일부 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
-    public ResponseEntity<PagingLookUpVO> getFilteredRecord(@RequestHeader(value = "Authorization")String token,
-                                                            @Valid @RequestBody PagingFilterRequestVO request){
+    public ResponseEntity<PagingLookUpDto> getFilteredRecord(@RequestHeader(value = "Authorization")String token,
+                                                             @Valid @RequestBody PagingFilterRequestDto request){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -74,7 +74,7 @@ public class RecordController {
     @GetMapping("/getAllToday")
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "오늘의 기록을 가져온다.")
     @Transactional(readOnly = true)
-    public ResponseEntity<List<RecordLookUpVO>> getAllTodayRecords(@RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<List<RecordLookUpDto>> getAllTodayRecords(@RequestHeader(value = "Authorization")String token){
         //user 찾기
         User user = getUserByToken(token);
         //user에 따른 레코드 찾기
@@ -84,8 +84,8 @@ public class RecordController {
 
     @PostMapping("/getAllByDateAndTimeTag")
     @ApiOperation(value = "기간과 timetag(아침, 점심, 저녁)으로 전체 기록을 가져온다.", notes = "timetag에는 아침, 점심, 저녁만 들어갈 수 있고, 혈당의 경우는 아침 -> 아침 식전, 식후 데이터를 모두 가져온다. 페이징은 하지 않는다.")
-    public ResponseEntity<List<RecordLookUpVO>> getAllByDateAndTimeTag(@RequestHeader(value = "Authorization")String token,
-                                                                       @Valid @RequestBody DateAndTimeTagFilterRequestVO request){
+    public ResponseEntity<List<RecordLookUpDto>> getAllByDateAndTimeTag(@RequestHeader(value = "Authorization")String token,
+                                                                        @Valid @RequestBody DateAndTimeTagFilterRequestDto request){
         //user 찾기
         User user = getUserByToken(token);
 

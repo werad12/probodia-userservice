@@ -5,9 +5,9 @@ import com.probodia.userservice.api.entity.record.BPressure;
 import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.BPressureRepository;
-import com.probodia.userservice.api.vo.bpressure.BPressureResponse;
-import com.probodia.userservice.api.vo.bpressure.BPressureUpdateVO;
-import com.probodia.userservice.api.vo.bpressure.BPressureVO;
+import com.probodia.userservice.api.dto.bpressure.BPressureResponse;
+import com.probodia.userservice.api.dto.bpressure.BPressureUpdateDto;
+import com.probodia.userservice.api.dto.bpressure.BPressureDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class BpressureService {
     }
 
     @Transactional
-    public BPressureResponse savePressure(BPressureVO request, User user) {
+    public BPressureResponse savePressure(BPressureDto request, User user) {
 
         BPressure bPressure = new BPressure();
         setRecordBase(bPressure,user,request.getTimeTag(),request.getRecordDate());
@@ -49,7 +49,7 @@ public class BpressureService {
 
 
     @Transactional
-    public BPressureResponse updateBPressure(BPressure bPressure, BPressureUpdateVO requestRecord) {
+    public BPressureResponse updateBPressure(BPressure bPressure, BPressureUpdateDto requestRecord) {
         bPressure.setMinBloodPressure(requestRecord.getMinBloodPressure());
         bPressure.setMaxBloodPressure(requestRecord.getMaxBloodPressure());
         bPressure.setHeartBeat(requestRecord.getHeartBeat());

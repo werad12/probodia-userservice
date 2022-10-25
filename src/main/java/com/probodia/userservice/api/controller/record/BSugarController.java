@@ -4,10 +4,9 @@ import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.BSugarService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.bsugar.BSugarResponse;
-import com.probodia.userservice.api.vo.bsugar.BSugarUpdateVO;
-import com.probodia.userservice.api.vo.bsugar.BSugarVO;
-import com.probodia.userservice.config.rabbitmq.RabbitMqConfig;
+import com.probodia.userservice.api.dto.bsugar.BSugarResponse;
+import com.probodia.userservice.api.dto.bsugar.BSugarUpdateDto;
+import com.probodia.userservice.api.dto.bsugar.BSugarDto;
 import com.probodia.userservice.messagequeue.RabbitProducer;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
@@ -15,8 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +39,7 @@ public class BSugarController {
     @PostMapping
     @ApiOperation(value = "혈당 기록 저장", notes = "혈당 기록을 저장한다.")
     public ResponseEntity<BSugarResponse> saveBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                           @Valid @RequestBody BSugarVO requestRecord){
+                                                           @Valid @RequestBody BSugarDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -58,7 +55,7 @@ public class BSugarController {
     @PutMapping
     @ApiOperation(value = "혈당 기록 수정", notes = "혈당 기록을 수정한다.")
     public ResponseEntity<BSugarResponse> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
-                                                             @Valid @RequestBody BSugarUpdateVO requestRecord){
+                                                             @Valid @RequestBody BSugarUpdateDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);

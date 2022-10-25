@@ -6,7 +6,7 @@ import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.exception.UnAuthorizedException;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.user.LoginResponseVO;
+import com.probodia.userservice.api.dto.user.LoginResponseDto;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.oauth.entity.RoleType;
 import com.probodia.userservice.oauth.token.AuthToken;
@@ -57,7 +57,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인 / 회원가입", notes = "로그인 또는 회원가입")
-    public ResponseEntity<LoginResponseVO> login(
+    public ResponseEntity<LoginResponseDto> login(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody AuthReqModel authReqModel
@@ -115,7 +115,7 @@ public class AuthController {
 
         String token = accessToken.getToken();
         String returnRefreshToken = refreshToken.getToken();
-        LoginResponseVO ret = new LoginResponseVO();
+        LoginResponseDto ret = new LoginResponseDto();
         ret.setApiAccessToken(token);
         ret.setApiRefreshToken(returnRefreshToken);
         ret.setIsSignUp(isSignup);

@@ -1,7 +1,7 @@
 package com.probodia.userservice.messagequeue;
 
-import com.probodia.userservice.api.vo.bsugar.BSugarResponse;
-import com.probodia.userservice.api.vo.meal.MealResponseVO;
+import com.probodia.userservice.api.dto.bsugar.BSugarResponse;
+import com.probodia.userservice.api.dto.meal.MealResponseDto;
 import com.probodia.userservice.config.rabbitmq.RabbitMqConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -14,10 +14,10 @@ public class RabbitProducer {
     private final RabbitMqConfig rabbitMqConfig;
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendFood(MealResponseVO mealResponseVO){
+    public void sendFood(MealResponseDto mealResponseDto){
 
         rabbitTemplate.convertAndSend(rabbitMqConfig.getExchageName(), rabbitMqConfig.getRoutingKey(),
-                mealResponseVO);
+                mealResponseDto);
     }
 
     public void sendSugar(BSugarResponse bSugarResponse){

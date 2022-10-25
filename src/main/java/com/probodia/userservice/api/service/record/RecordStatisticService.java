@@ -4,12 +4,12 @@ import com.probodia.userservice.api.entity.record.*;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MealDetailRepository;
 import com.probodia.userservice.api.repository.record.RecordRepository;
-import com.probodia.userservice.api.vo.food.FoodInfoVO;
-import com.probodia.userservice.api.vo.medicine.MedicineStatisticDetailVO;
-import com.probodia.userservice.api.vo.recordstat.AverageNeutrientVO;
-import com.probodia.userservice.api.vo.recordstat.MedicineStatVO;
-import com.probodia.userservice.api.vo.recordstat.RangeBSugarVO;
-import com.probodia.userservice.api.vo.recordstat.RecordPercentVO;
+import com.probodia.userservice.api.dto.food.FoodInfoDto;
+import com.probodia.userservice.api.dto.medicine.MedicineStatisticDetailDto;
+import com.probodia.userservice.api.dto.recordstat.AverageNeutrientDto;
+import com.probodia.userservice.api.dto.recordstat.MedicineStatDto;
+import com.probodia.userservice.api.dto.recordstat.RangeBSugarDto;
+import com.probodia.userservice.api.dto.recordstat.RecordPercentDto;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.feign.FoodServiceClient;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class RecordStatisticService {
     private final FoodServiceClient foodServiceClient;
 
 
-    public RangeBSugarVO getBSugarRange(User user,String stdate, String endate) {
+    public RangeBSugarDto getBSugarRange(User user, String stdate, String endate) {
 
 //        log.info("LOW : {}, HIGH : {}",appProperties.getBloodSugar().getLow(), appProperties.getBloodSugar().getHigh());
 
@@ -81,11 +81,11 @@ public class RecordStatisticService {
         });
 
         total = low.get() + mid.get() + high.get();
-        return new RangeBSugarVO(total,low.get(),mid.get(),high.get());
+        return new RangeBSugarDto(total,low.get(),mid.get(),high.get());
     }
 
     @Transactional
-    public AverageNeutrientVO getAverageNutrient(User user, String stdate, String endate) {
+    public AverageNeutrientDto getAverageNutrient(User user, String stdate, String endate) {
 
         //데이터 가져온다.
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndType(user, stdate, endate,"MEAL");
@@ -97,9 +97,9 @@ public class RecordStatisticService {
 
         //foodId값으로 음식 정보 가져온다. Map으로 가져온다.
         List<String> foodIds = mealDetails.stream().map(MealDetail::getFoodId).collect(Collectors.toList());
-        ResponseEntity<List<FoodInfoVO>> response = foodServiceClient.getFoodDetails(foodIds);
+        ResponseEntity<List<FoodInfoDto>> response = foodServiceClient.getFoodDetails(foodIds);
 
-        List<FoodInfoVO> foodDetails = response.getBody();
+        List<FoodInfoDto> foodDetails = response.getBody();
         //일일별로 더하고, 컬럼 개수만큼 나눈다.
         Map<String, Vector<Double>> proteinMap = new HashMap<>();
         Map<String, Vector<Double>> carboMap = new HashMap<>();
@@ -110,7 +110,7 @@ public class RecordStatisticService {
             String date = meal.getRecordDate().substring(0,10);
             log.info("DATE : {}",date);
             String foodName = m.getFoodName();
-            FoodInfoVO foodInfo = foodDetails.stream().filter(e -> e.getName().equals(foodName))
+            FoodInfoDto foodInfo = foodDetails.stream().filter(e -> e.getName().equals(foodName))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Not found food with foodId"));
 
@@ -136,7 +136,7 @@ public class RecordStatisticService {
         Double carbo = getDayAvg(carboMap);
         Double fat = getDayAvg(fatMap);
 
-        return new AverageNeutrientVO(protein/dayCnt, carbo/dayCnt, fat/dayCnt);
+        return new AverageNeutrientDto(protein/dayCnt, carbo/dayCnt, fat/dayCnt);
     }
 
     private Double getDayAvg(Map<String,Vector<Double>> map){
@@ -158,7 +158,7 @@ public class RecordStatisticService {
     }
 
 
-    public RecordPercentVO getRecordPercent(User user, String stdate, String endate) throws ParseException {
+    public RecordPercentDto getRecordPercent(User user, String stdate, String endate) throws ParseException {
 
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetween(user, stdate, endate);
 
@@ -234,16 +234,16 @@ public class RecordStatisticService {
             }
         });
 
-        return new RecordPercentVO(morningCnt.get() * 100/(int)diff, noonCnt.get() * 100/(int)diff, nightCnt.get() * 100/(int)diff);
+        return new RecordPercentDto(morningCnt.get() * 100/(int)diff, noonCnt.get() * 100/(int)diff, nightCnt.get() * 100/(int)diff);
     }
 
 
     @Transactional
-    public MedicineStatVO getMedicineStat(User user, String stdate, String endate) {
+    public MedicineStatDto getMedicineStat(User user, String stdate, String endate) {
 
         List<Records> medicine = recordRepository.findAllByUserAndRecordDateBetweenAndType(user, stdate, endate, "MEDICINE");
 
-        List<MedicineStatisticDetailVO> ret = new ArrayList<>();
+        List<MedicineStatisticDetailDto> ret = new ArrayList<>();
         List<String> set = new ArrayList<>();
 
         for(Records r : medicine){
@@ -257,7 +257,7 @@ public class RecordStatisticService {
 
         set = set.stream().distinct().collect(Collectors.toList());
         for(String name : set){
-            ret.add(new MedicineStatisticDetailVO(name, 0));
+            ret.add(new MedicineStatisticDetailDto(name, 0));
         }
 
 
@@ -268,7 +268,7 @@ public class RecordStatisticService {
             Set<MedicineDetail> medicineDetails = m.getMedicineDetails();
 
             for(MedicineDetail md : medicineDetails){
-                for(MedicineStatisticDetailVO mvo : ret){
+                for(MedicineStatisticDetailDto mvo : ret){
                     if(mvo.getMedicineName().equals(md.getMedicineName())){
                         mvo.setMedicineCnt(mvo.getMedicineCnt() + 1);
                     }
@@ -277,7 +277,7 @@ public class RecordStatisticService {
 
         }
 
-        return new MedicineStatVO(ret);
+        return new MedicineStatDto(ret);
     }
 
     public Double getHemoglobin(User user, String stdate, String endate) {

@@ -5,9 +5,9 @@ import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.BSugarRepository;
-import com.probodia.userservice.api.vo.bsugar.BSugarResponse;
-import com.probodia.userservice.api.vo.bsugar.BSugarUpdateVO;
-import com.probodia.userservice.api.vo.bsugar.BSugarVO;
+import com.probodia.userservice.api.dto.bsugar.BSugarResponse;
+import com.probodia.userservice.api.dto.bsugar.BSugarUpdateDto;
+import com.probodia.userservice.api.dto.bsugar.BSugarDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class BSugarService {
     }
 
     @Transactional
-    public BSugarResponse saveSugar(BSugarVO request, User user) {
+    public BSugarResponse saveSugar(BSugarDto request, User user) {
 
         BSugar bSugar = new BSugar();
         setRecordBase(bSugar,user,request.getTimeTag(),request.getRecordDate());
@@ -49,7 +49,7 @@ public class BSugarService {
 
 
     @Transactional
-    public BSugarResponse updateBSugar(BSugar sugar, BSugarUpdateVO updateVO){
+    public BSugarResponse updateBSugar(BSugar sugar, BSugarUpdateDto updateVO){
         sugar.setBloodSugar(updateVO.getBloodSugar());
         sugar.setTimeTag(TimeTagCode.findByValue(updateVO.getTimeTag()));
         sugar.setRecordDate(updateVO.getRecordDate());

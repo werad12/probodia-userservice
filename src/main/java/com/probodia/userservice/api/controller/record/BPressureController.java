@@ -4,9 +4,9 @@ import com.probodia.userservice.api.entity.record.BPressure;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.BpressureService;
 import com.probodia.userservice.api.service.user.UserService;
-import com.probodia.userservice.api.vo.bpressure.BPressureResponse;
-import com.probodia.userservice.api.vo.bpressure.BPressureUpdateVO;
-import com.probodia.userservice.api.vo.bpressure.BPressureVO;
+import com.probodia.userservice.api.dto.bpressure.BPressureResponse;
+import com.probodia.userservice.api.dto.bpressure.BPressureUpdateDto;
+import com.probodia.userservice.api.dto.bpressure.BPressureDto;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +43,7 @@ public class BPressureController {
     @PostMapping
     @ApiOperation(value = "혈압 기록 저장", notes = "혈압 기록을 저장한다.")
     public ResponseEntity<BPressureResponse> saveBPressureRecord(@RequestHeader(value = "Authorization")String token,
-                                                                 @Valid @RequestBody BPressureVO requestRecord){
+                                                                 @Valid @RequestBody BPressureDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);
@@ -55,7 +55,7 @@ public class BPressureController {
     @PutMapping
     @ApiOperation(value = "혈압 기록 수정", notes = "혈압 기록을 수정한다.")
     public ResponseEntity<BPressureResponse> updateBPressureRecord(@RequestHeader(value = "Authorization")String token,
-                                                                   @Valid @RequestBody BPressureUpdateVO requestRecord){
+                                                                   @Valid @RequestBody BPressureUpdateDto requestRecord){
 
         //user 찾기
         User user = getUserByToken(token);

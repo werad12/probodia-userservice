@@ -7,7 +7,7 @@ import com.probodia.userservice.api.entity.record.Records;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.MealDetailRepository;
 import com.probodia.userservice.api.repository.record.MealRepository;
-import com.probodia.userservice.api.vo.meal.*;
+import com.probodia.userservice.api.dto.meal.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,18 +46,18 @@ public class MealService {
     }
 
     @Transactional
-    public MealResponseVO saveMeal(User user, MealVO request){
+    public MealResponseDto saveMeal(User user, MealDto request){
 
         Meal savedMeal = saveMeal(user, request.getTimeTag(), request.getRecordDate());
-        MealResponseVO retValue = saveMealDetail(savedMeal, request.getMealDetails());
+        MealResponseDto retValue = saveMealDetail(savedMeal, request.getMealDetails());
 
         return retValue;
     }
 
-    private MealResponseVO saveMealDetail(Meal meal, List<MealDetailVO> mealDetails) {
+    private MealResponseDto saveMealDetail(Meal meal, List<MealDetailDto> mealDetails) {
 
 
-        for(MealDetailVO requestDetail : mealDetails){
+        for(MealDetailDto requestDetail : mealDetails){
             MealDetail col = new MealDetail();
 
             col.setFoodName(requestDetail.getFoodName());
@@ -116,7 +116,7 @@ public class MealService {
     }
 
     @Transactional
-    public MealResponseVO updateMeal(Meal meal, MealUpdateVO requestRecord) {
+    public MealResponseDto updateMeal(Meal meal, MealUpdateDto requestRecord) {
 
         meal.setTimeTag(TimeTagCode.findByValue(requestRecord.getTimeTag()));
         meal.setRecordDate(requestRecord.getRecordDate());
@@ -125,7 +125,7 @@ public class MealService {
 
         Set<MealDetail> mealDetails = new HashSet<>();
 
-        for(MealDetailVO m : requestRecord.getMealDetails()){
+        for(MealDetailDto m : requestRecord.getMealDetails()){
             MealDetail detail = new MealDetail();
             detail.setQuantity(m.getQuantity());
             detail.setFoodName(m.getFoodName());
@@ -147,13 +147,13 @@ public class MealService {
         return mealConvert(saved);
     }
 
-    private MealResponseVO mealConvert(Meal saved){
-        List<MealDetailResponseVO> detailConverted = new ArrayList<>();
+    private MealResponseDto mealConvert(Meal saved){
+        List<MealDetailResponseDto> detailConverted = new ArrayList<>();
         for(MealDetail detail : saved.getMealDetails()){
             detailConverted.add(mealDetailConvert(detail));
         }
 
-        return MealResponseVO.builder().recordId(saved.getId())
+        return MealResponseDto.builder().recordId(saved.getId())
                 .mealDetails(detailConverted)
                 .timeTag(saved.getTimeTag().getValue())
                 .recordDate(saved.getRecordDate()).userId(saved.getUser().getUserId())
@@ -161,8 +161,8 @@ public class MealService {
 
     }
 
-    private MealDetailResponseVO mealDetailConvert(MealDetail saved){
-        return MealDetailResponseVO.builder().mealDetailId(saved.getId())
+    private MealDetailResponseDto mealDetailConvert(MealDetail saved){
+        return MealDetailResponseDto.builder().mealDetailId(saved.getId())
                 .foodName(saved.getFoodName()).imageUrl(saved.getImageUrl())
                 .quantity(saved.getQuantity()).foodId(saved.getFoodId())
                 .bloodSugar(saved.getBloodSugar()).calories(saved.getCalorie()).build();

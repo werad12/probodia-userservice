@@ -5,8 +5,8 @@ import com.probodia.userservice.api.entity.enums.base.DiabeteCode;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.repository.record.RecordRepository;
 import com.probodia.userservice.api.repository.user.UserRepository;
-import com.probodia.userservice.api.vo.user.UserInfoRequestVO;
-import com.probodia.userservice.api.vo.user.UserInfoVO;
+import com.probodia.userservice.api.dto.user.UserInfoRequestDto;
+import com.probodia.userservice.api.dto.user.UserInfoDto;
 import com.probodia.userservice.oauth.entity.ProviderType;
 import com.probodia.userservice.oauth.entity.RoleType;
 import lombok.RequiredArgsConstructor;
@@ -97,8 +97,8 @@ public class UserService {
         return userRepository.saveAndFlush(user);
     }
 
-    public UserInfoVO getUserInfo(User user){
-        return UserInfoVO.builder().userId(user.getUserId())
+    public UserInfoDto getUserInfo(User user){
+        return UserInfoDto.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
                 .diabeteCode(user.getDiabeteCode()==null? null : user.getDiabeteCode().getValue()).age(user.getAge())
@@ -107,7 +107,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoVO updateUserInfo(UserInfoRequestVO request, User user) {
+    public UserInfoDto updateUserInfo(UserInfoRequestDto request, User user) {
 
         if(request.getHeight()!=null){
             user.setHeight(request.getHeight());
@@ -137,7 +137,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return UserInfoVO.builder().userId(user.getUserId())
+        return UserInfoDto.builder().userId(user.getUserId())
                 .height(user.getHeight()).sex(user.getSex())
                 .weight(user.getWeight()).profileImageUrl(user.getProfileImageUrl())
                 .diabeteCode(user.getDiabeteCode().getValue()).age(user.getAge())
