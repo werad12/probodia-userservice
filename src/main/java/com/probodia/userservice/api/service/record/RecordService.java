@@ -103,7 +103,7 @@ public class RecordService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Records> pageRecord = recordRepository.findAllByUserAndTypeInOrderByRecordDateDesc(pageRequest,user,filterType);
         PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
-
+        //
         List<Records> records = pageRecord.getContent();
         List<RecordLookUpVO> retValue = getRecordList(records);
         return new PagingLookUpVO(retValue,pageInfo);
