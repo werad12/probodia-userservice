@@ -18,14 +18,14 @@ import java.util.List;
 public interface RecordRepository extends JpaRepository<Records,Long> {
     List<Records> findAllByUser(User user);
 
-    Page<Records> findAllByUserOrderByCreatedDateDesc(Pageable pageable, User user);
+    Page<Records> findAllByUserOrderByRecordDateDesc(Pageable pageable, User user);
 
-    Page<Records> findAllByUserAndTypeInOrderByCreatedDateDesc(Pageable pageable, User user, List<String> typeList);
+    Page<Records> findAllByUserAndTypeInOrderByRecordDateDesc(Pageable pageable, User user, List<String> typeList);
     List<Records> findAllByUserAndRecordDateBetween(User user, String start, String end);
 
     List<Records> findAllByUserAndRecordDateBetweenAndType(User user, String start, String end,String type);
 
-    List<Records> findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(User user,
+    List<Records> findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByRecordDateDesc(User user,
                                                                                                 String start,
                                                                                                 String end,
                                                                                                       List<String> typeList,

@@ -81,7 +81,7 @@ public class RecordService {
         }
 
         log.info("Start time : {}, End time : {}", request.getStartDate(),request.getEndDate());
-        List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByCreatedDateDesc(user,
+        List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByRecordDateDesc(user,
                 request.getStartDate(), request.getEndDate(), request.getFilterType(), timeTagCodes);
 
         log.info("SIZE : {}", records.size());
@@ -91,7 +91,7 @@ public class RecordService {
     @Transactional(readOnly = true)
     public PagingLookUpVO findAllByUser(User user, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Records> pageRecord =recordRepository.findAllByUserOrderByCreatedDateDesc(pageRequest,user);
+        Page<Records> pageRecord =recordRepository.findAllByUserOrderByRecordDateDesc(pageRequest,user);
         PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
 
         List<Records> records = pageRecord.getContent();
@@ -101,7 +101,7 @@ public class RecordService {
     @Transactional(readOnly = true)
     public PagingLookUpVO findAllByUser(User user, int page, int size, List<String> filterType) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Records> pageRecord = recordRepository.findAllByUserAndTypeInOrderByCreatedDateDesc(pageRequest,user,filterType);
+        Page<Records> pageRecord = recordRepository.findAllByUserAndTypeInOrderByRecordDateDesc(pageRequest,user,filterType);
         PageInfoUtil pageInfo = new PageInfoUtil(page,size,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
 
         List<Records> records = pageRecord.getContent();

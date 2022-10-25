@@ -58,7 +58,7 @@ public class RecordController {
         return new ResponseEntity<>(recordService.findAllByUser(user,page - 1,size),HttpStatus.OK);
     }
 
-    @GetMapping("/getAllFiltered")
+    @PostMapping("/getAllFiltered")
     @ApiOperation(value = "user Id로 일부 기록을 가져온다.", notes = "일부 기록을 가져온다. 페이징 번호는 1부터 시작한다.")
     public ResponseEntity<PagingLookUpVO> getFilteredRecord(@RequestHeader(value = "Authorization")String token,
                                                             @Valid @RequestBody PagingFilterRequestVO request){
