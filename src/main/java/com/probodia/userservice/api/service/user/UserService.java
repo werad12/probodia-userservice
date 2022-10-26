@@ -152,4 +152,12 @@ public class UserService {
         userRepository.delete(user);
         return userId;
     }
+
+    @Transactional
+    public void updatePoint(String userId, Integer point) {
+        User byUserId = userRepository.findByUserId(userId);
+        if(byUserId==null) throw new IllegalArgumentException("Not found user");
+        Integer prev = byUserId.getPoint();
+        byUserId.setPoint(prev + point);
+    }
 }

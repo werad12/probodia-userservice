@@ -25,6 +25,16 @@ public class UserController {
     private final UserService userService;
     private final AuthTokenProvider tokenProvider;
 
+    @PostMapping("/point")
+    @ApiOperation(value = "챌린지로 포인트 변화시킨다.")
+    public String setPoint(@RequestBody Integer point, @RequestHeader(value = "Authorization")String token,@RequestParam("userId") String userId){
+        log.info("POINT {}",point);
+        User user = getUserByToken(token);
+
+        userService.updatePoint(userId, point);
+
+        return "OK";
+    }
 
     @GetMapping
     @ApiOperation(value = "user Id로 전체 기록을 가져온다.", notes = "모든 기록을 가져온다.")

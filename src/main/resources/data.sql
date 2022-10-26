@@ -53,6 +53,7 @@ CREATE TABLE `user` (
                         `weight` int(11) DEFAULT NULL,
                         `age` int(11) DEFAULT NULL,
                         `diabete_code` int(11) DEFAULT NULL,
+                        `point` int(11) DEFAULT 0,
                         PRIMARY KEY (`user_seq`),
                         UNIQUE KEY `UK_a3imlf41l37utmxiquukk8ajc` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
@@ -65,9 +66,9 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` VALUES
-                       (2,'2022-07-30 19:13:28.284698','2022-09-09 01:16:48.762119',1,'NO_EMAIL','Y',1231234,'NO_PASS','http://k.kakaocdn.net/dn/hSJFV/btreg2RIL0j/qsB7yCdkQMwJEGtgmrqTzK/img_110x110.jpg','KAKAO','USER','M','2343341101','박서진',1231234,17,NULL),
-                       (3,'2022-08-05 16:03:00.944198','2022-08-05 16:03:00.944198',1,'NO_EMAIL','Y',NULL,'NO_PASS','http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_110x110.jpg','KAKAO','USER',NULL,'2375722938','이지상',NULL,NULL,NULL),
-                       (6,'2022-08-16 14:50:49.764608','2022-08-16 14:50:49.764608',1,'NO_EMAIL','Y',NULL,'NO_PASS','test.com','KAKAO','USER',NULL,'testtesttest','test1234',NULL,NULL,NULL);
+                       (2,'2022-07-30 19:13:28.284698','2022-09-09 01:16:48.762119',1,'NO_EMAIL','Y',1231234,'NO_PASS','http://k.kakaocdn.net/dn/hSJFV/btreg2RIL0j/qsB7yCdkQMwJEGtgmrqTzK/img_110x110.jpg','KAKAO','USER','M','2343341101','박서진',1231234,17,NULL,0),
+                       (3,'2022-08-05 16:03:00.944198','2022-08-05 16:03:00.944198',1,'NO_EMAIL','Y',NULL,'NO_PASS','http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_110x110.jpg','KAKAO','USER',NULL,'2375722938','이지상',NULL,NULL,NULL,0),
+                       (6,'2022-08-16 14:50:49.764608','2022-08-16 14:50:49.764608',1,'NO_EMAIL','Y',NULL,'NO_PASS','test.com','KAKAO','USER',NULL,'testtesttest','test1234',NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

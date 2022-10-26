@@ -1,20 +1,15 @@
 package com.probodia.userservice.api.controller;
 
 import com.probodia.userservice.config.properties.AppProperties;
-import com.probodia.userservice.config.rabbitmq.RabbitMqConfig;
+import com.probodia.userservice.config.rabbitmq.RabbitProducerConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
@@ -25,7 +20,7 @@ public class HealthCheckController {
     String serverPort;
 
 
-    private final RabbitMqConfig rabbitMqConfig;
+    private final RabbitProducerConfig rabbitMqConfig;
 
     private final RabbitTemplate rabbitTemplate;
 
