@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.controller.record;
 
+import com.probodia.userservice.api.annotation.TokenRequired;
 import com.probodia.userservice.api.entity.record.BSugar;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.BSugarService;
@@ -33,16 +34,12 @@ public class BSugarController {
 
 
     private final BSugarService bSugarService;
-    private final UserService userService;
-    private final AuthTokenProvider tokenProvider;
     private final RabbitProducer rabbitProducer;
     @PostMapping
     @ApiOperation(value = "혈당 기록 저장", notes = "혈당 기록을 저장한다.")
-    public ResponseEntity<BSugarResponse> saveBSugarRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<BSugarResponse> saveBSugarRecord(@TokenRequired User user,
                                                            @Valid @RequestBody BSugarDto requestRecord){
 
-        //user 찾기
-        User user = getUserByToken(token);
         //혈당 기록 저장
         BSugarResponse saved = bSugarService.saveSugar(requestRecord, user);
 
@@ -54,11 +51,9 @@ public class BSugarController {
 
     @PutMapping
     @ApiOperation(value = "혈당 기록 수정", notes = "혈당 기록을 수정한다.")
-    public ResponseEntity<BSugarResponse> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<BSugarResponse> updateBSugarRecord(@TokenRequired User user,
                                                              @Valid @RequestBody BSugarUpdateDto requestRecord){
 
-        //user 찾기
-        User user = getUserByToken(token);
         //record 찾기
         Optional<BSugar> updateRecord = bSugarService.findBSugarByUserAndId(user, requestRecord.getRecordId());
         if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
@@ -71,12 +66,9 @@ public class BSugarController {
 
     @DeleteMapping("/{recordId}")
     @ApiOperation(value = "혈당 기록 삭제", notes = "혈당 기록을 삭제한다.")
-    public ResponseEntity<Long> deleteBSugarRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<Long> deleteBSugarRecord(@TokenRequired User user,
                                                    @PathVariable(name = "recordId") @ApiParam(value = "페이지 번호", required = true,example = "12")
                                                    @NotNull(message = "Record Id cannot be null")Long recordId){
-
-        //user 찾기
-        User user = getUserByToken(token);
 
         //record 찾기
         Optional<BSugar> deleteRecord = bSugarService.findBSugarByUserAndId(user, recordId);
@@ -85,22 +77,5 @@ public class BSugarController {
         return new ResponseEntity<>(bSugarService.deleteBSugar(deleteRecord.get()),HttpStatus.OK);
     }
 
-    private User getUserByToken(String bearerToken){
-
-        return getUser(tokenProvider.getTokenSubject(bearerToken.substring(7)));
-    }
-
-    private User getUser(Long userId){
-        return getUser(String.valueOf(userId));
-    }
-
-    private User getUser(String userId) {
-        User user = userService.getUser(userId);
-
-        if(user==null){
-            throw new UsernameNotFoundException("Not found User by userId");
-        }
-        return user;
-    }
     
 }

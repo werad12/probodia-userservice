@@ -54,6 +54,20 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
+    public PagingLookUpDto getDocterView(User user,int pageSize, int size,int page,String stDate,List<String> type){
+        if(pageSize * page>size){
+            pageSize = size - pageSize * (page - 1);
+        }
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        Page<Records> pageRecord = recordRepository.findAllByUserAndRecordDateAfterAndTypeInOrderByRecordDateDesc(pageRequest,user,stDate,type);
+        PageInfoUtil pageInfo = new PageInfoUtil(page,pageSize,(int) pageRecord.getTotalElements(), pageRecord.getTotalPages());
+        //
+        List<Records> records = pageRecord.getContent();
+        List<RecordLookUpDto> retValue = getRecordList(records);
+        return new PagingLookUpDto(retValue,pageInfo);
+    }
+
+    @Transactional(readOnly = true)
     public List<RecordLookUpDto> findAllByUserAndDateAndTimeTagAndRecordType(User user, DateAndTimeTagFilterRequestDto request){
 
         List<TimeTagCode> timeTagCodes = new ArrayList<>();
@@ -164,6 +178,7 @@ public class RecordService {
                 BSugarResponse.builder().bloodSugar(bSugar.getBloodSugar())
                         .timeTag(bSugar.getTimeTag().getValue())
                         .recordId(bSugar.getId())
+                        .userId(bSugar.getUser().getUserId())
                         .recordDate(bSugar.getRecordDate())
                         .build();
     }

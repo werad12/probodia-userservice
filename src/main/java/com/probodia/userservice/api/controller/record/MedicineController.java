@@ -1,5 +1,6 @@
 package com.probodia.userservice.api.controller.record;
 
+import com.probodia.userservice.api.annotation.TokenRequired;
 import com.probodia.userservice.api.entity.record.Medicine;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.service.record.MedicineService;
@@ -11,6 +12,7 @@ import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,27 +28,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/record/medicine")
 @Slf4j
+@RequiredArgsConstructor
 @Api(value = "Medicine Controller", description = "투약 기록과 관련된 API")
 public class MedicineController {
 
-    private MedicineService medicineService;
-    private UserService userService;
-    private AuthTokenProvider tokenProvider;
-
-    @Autowired
-    public MedicineController(MedicineService medicineService, UserService userService, AuthTokenProvider tokenProvider) {
-        this.medicineService = medicineService;
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-    }
+    private final MedicineService medicineService;
 
     @PostMapping
     @ApiOperation(value = "투약 기록 저장", notes = "투약 기록을 저장한다.")
-    public ResponseEntity<MedicineResponseDto> saveMedicineRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<MedicineResponseDto> saveMedicineRecord(@TokenRequired User user,
                                                                   @Valid @RequestBody MedicineDto requestRecord){
-
-        //user 찾기
-        User user = getUserByToken(token);
 
         //투약 데이터 먼저 저장
         //Medicine detail 저장
@@ -58,11 +49,9 @@ public class MedicineController {
 
     @PostMapping("/update")
     @ApiOperation(value = "투약 기록 수정", notes = "투약 기록을 수정한다.")
-    public ResponseEntity<MedicineResponseDto> updateBSugarRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<MedicineResponseDto> updateBSugarRecord(@TokenRequired User user,
                                                                   @Valid @RequestBody MedicineUpdateDto requestRecord){
 
-        //user 찾기
-        User user = getUserByToken(token);
         //record 찾기
         Optional<Medicine> updateRecord = medicineService.findMedicineByUserAndId(user, requestRecord.getRecordId());
         if(updateRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
@@ -75,36 +64,16 @@ public class MedicineController {
 
     @DeleteMapping("/{recordId}")
     @ApiOperation(value = "투약 기록 삭제", notes = "투약 기록을 삭제한다.")
-    public ResponseEntity<Long> deleteMedicineRecord(@RequestHeader(value = "Authorization")String token,
+    public ResponseEntity<Long> deleteMedicineRecord(@TokenRequired User user,
                                                      @PathVariable(name = "recordId") @ApiParam(value = "페이지 번호", required = true,example = "12")
                                                      @NotNull(message = "Record Id cannot be null")Long recordId){
 
-        //user 찾기
-        User user = getUserByToken(token);
 
         //record 찾기
         Optional<Medicine> deleteRecord = medicineService.findMedicineByUserAndId(user, recordId);
         if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
         return new ResponseEntity<>(medicineService.deleteMedicine(deleteRecord.get()),HttpStatus.OK);
-    }
-
-    private User getUserByToken(String bearerToken){
-
-        return getUser(tokenProvider.getTokenSubject(bearerToken.substring(7)));
-    }
-
-    private User getUser(Long userId){
-        return getUser(String.valueOf(userId));
-    }
-
-    private User getUser(String userId) {
-        User user = userService.getUser(userId);
-
-        if(user==null){
-            throw new UsernameNotFoundException("Not found User by userId");
-        }
-        return user;
     }
 
 

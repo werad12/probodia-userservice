@@ -27,9 +27,11 @@ public interface RecordRepository extends JpaRepository<Records,Long> {
 
     List<Records> findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByRecordDateDesc(User user,
                                                                                                 String start,
-                                                                                                String end,
+                                                                                                      String end,
                                                                                                       List<String> typeList,
                                                                                                 List<TimeTagCode> timeTagCodes);
+
+    Page<Records> findAllByUserAndRecordDateAfterAndTypeInOrderByRecordDateDesc(Pageable pageable,User user,String start,List<String> typeList);
 
     void deleteAllByUser(User user);
 }

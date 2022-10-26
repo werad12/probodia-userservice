@@ -47,10 +47,4 @@ public class HealthCheckController {
 
 
 
-    @GetMapping("header_test")
-    public String headerTest(@RequestHeader(value = "Authorization")String token){
-        return token;
-    }
-
-
 }
