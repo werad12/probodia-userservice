@@ -1,9 +1,13 @@
 package com.probodia.userservice.oauth.token;
 
+import com.probodia.userservice.oauth.exception.TokenValidFailedException;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.security.Key;
 import java.util.Date;
@@ -85,6 +89,8 @@ public class AuthToken {
             log.info("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
+        } catch (Exception e){
+            log.info("Token Auth failed");
         }
         return null;
     }

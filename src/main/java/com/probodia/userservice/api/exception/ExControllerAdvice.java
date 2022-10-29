@@ -1,6 +1,7 @@
 package com.probodia.userservice.api.exception;
 
 import com.probodia.userservice.common.ErrorResult;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,13 +18,20 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
-public class ExControllerAdvice {
+public class ExControllerAdvice implements ErrorController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UsernameNotFoundException.class)
     public ErrorResult userNotFoundExHandle(UsernameNotFoundException e) {
         return new ErrorResult("Not found User", e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(TokenAuthException.class)
+    public ErrorResult tokenAuthExHandle(TokenAuthException e){
+        return new ErrorResult("Token Authentication Failed..",e.getMessage());
+    }
+
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)

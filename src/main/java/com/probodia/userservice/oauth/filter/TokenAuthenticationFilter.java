@@ -1,13 +1,18 @@
 package com.probodia.userservice.oauth.filter;
 
+import com.probodia.userservice.api.exception.TokenAuthException;
 import com.probodia.userservice.oauth.token.AuthToken;
 import com.probodia.userservice.oauth.token.AuthTokenProvider;
 import com.probodia.userservice.utils.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,6 +24,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final AuthTokenProvider tokenProvider;
+
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
 
     @Override
     protected void doFilterInternal(
@@ -32,9 +42,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if (token.validate()) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+        }
+        else{
+            resolver.resolveException(request,response,null,
+                    new TokenAuthException("Token Authentication Failed"));
         }
 
-        filterChain.doFilter(request, response);
+        BasicErrorController
+
     }
 
 }
