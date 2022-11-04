@@ -43,6 +43,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String tokenStr = HeaderUtil.getAccessToken(request);
         AuthToken token = tokenProvider.convertAuthToken(tokenStr);
 
+        String requestURI = request.getRequestURI();
+        log.info("request : {}",requestURI);
+
+
         if (token.validate()) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -50,6 +54,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
         else{
+            if(!requestURI.startsWith("/api")){
+//                log.info("HELLO");
+                filterChain.doFilter(request,response);
+                return;
+            }
+
             resolver.resolveException(request,response,null,
                     new TokenAuthException("Token Authentication Failed"));
         }

@@ -25,7 +25,7 @@ public class RabbitProducerConfig {
     private String routingKey;
 
 
-
+//ㄴ
     @Bean
     TopicExchange exchange(){
         return new TopicExchange(exchageName);
