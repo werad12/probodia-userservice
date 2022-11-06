@@ -47,7 +47,7 @@ public class RecordService {
         String startTime = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String endTime = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        log.info("Start time : {}, End time : {}",startTime,endTime);
+        log.debug("Start time : {}, End time : {}",startTime,endTime);
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetween(user, startTime, endTime);
 
         return getRecordList(records);
@@ -94,11 +94,11 @@ public class RecordService {
             }
         }
 
-        log.info("Start time : {}, End time : {}", request.getStartDate(),request.getEndDate());
+        log.debug("Start time : {}, End time : {}", request.getStartDate(),request.getEndDate());
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndTypeInAndTimeTagInOrderByRecordDateDesc(user,
                 request.getStartDate(), request.getEndDate(), request.getFilterType(), timeTagCodes);
 
-        log.info("SIZE : {}", records.size());
+        log.debug("SIZE : {}", records.size());
 
         return getRecordList(records);
     }

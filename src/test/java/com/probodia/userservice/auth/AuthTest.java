@@ -27,7 +27,7 @@ public class AuthTest {
 
         authToken.validate();
 
-        log.info("--------------");
+        log.debug("--------------");
 
         Claims expiredTokenClaims = authToken.getExpiredTokenClaims();
 
@@ -44,7 +44,7 @@ public class AuthTest {
 //        AuthToken authToken = tokenProvider.convertAuthToken(token);
 //
 //        Date expiration = authToken.getTokenClaims().getExpiration();
-//        log.info("date : {}",expiration);
+//        log.debug("date : {}",expiration);
 //
 //    }
 //
@@ -55,7 +55,7 @@ public class AuthTest {
 //        AuthToken authToken = tokenProvider.convertAuthToken(token);
 //
 //        Date expiration = authToken.getTokenClaims().getExpiration();
-//        log.info("date : {}",expiration);
+//        log.debug("date : {}",expiration);
 //
 //    }
 

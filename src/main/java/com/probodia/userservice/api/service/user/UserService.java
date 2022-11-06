@@ -47,7 +47,7 @@ public class UserService {
         String statusCode = String.valueOf(response.getStatusCodeValue());
 
         ret.put("status",statusCode);
-        log.info("Kakao return status : {}",statusCode);
+        log.debug("Kakao return status : {}",statusCode);
         if(statusCode.equals("200")){
             ret.put("id",String.valueOf((Long)response.getBody().get("id")));
         }
@@ -71,7 +71,7 @@ public class UserService {
         String name = properties.get("nickname");
         String imageUrl = properties.get("thumbnail_image");
 
-        log.info("[UserInfo] : username = {}",name);
+        log.debug("[UserInfo] : username = {}",name);
 
         Map<String,String> ret = new HashMap<>();
         ret.put("id",id);
@@ -83,7 +83,7 @@ public class UserService {
 
     public User createUser(Map<String, String> userInfo) {
 
-        log.info("[User] : username = {}",userInfo.get("name"));
+        log.debug("[User] : username = {}",userInfo.get("name"));
 
         User user = new User(
                 userInfo.get("id"),
@@ -126,7 +126,7 @@ public class UserService {
         }
 
         if(request.getAge()!=null){
-            log.info("age : {}",request.getAge());
+            log.debug("age : {}",request.getAge());
             user.setAge(request.getAge());
         }
 

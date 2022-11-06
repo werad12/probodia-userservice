@@ -33,9 +33,9 @@ class RecordRepositoryTest {
         List<String> filterType = new ArrayList<>();
         filterType.add("MEAL");
         filterType.add("MEDICINE");
-        log.info("user seq : {}",user.getUserSeq());
+        log.debug("user seq : {}",user.getUserSeq());
         Page<Records> result = recordRepository.findAllByUserAndTypeInOrderByCreatedDateDesc(pageRequest, user, filterType);
-        log.info("result = {}", result.getContent());
+        log.debug("result = {}", result.getContent());
 
     }
 }

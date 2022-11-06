@@ -17,7 +17,7 @@ public class RabbitProducer {
     private final RabbitTemplate rabbitTemplate;
 
     public void sendFood(MealResponseDto mealResponseDto){
-        log.info("send Food!");
+        log.debug("send Food!");
 
         rabbitTemplate.convertAndSend(rabbitMqConfig.getExchageName(), rabbitMqConfig.getRoutingKey(),
                 mealResponseDto);

@@ -74,7 +74,7 @@ public class MealController {
 
         //record 찾기
         Optional<Meal> deleteRecord = mealService.findMealByUserAndId(user, recordId);
-        log.info("delete Record : {}",deleteRecord);
+        log.debug("delete Record : {}",deleteRecord);
         if(deleteRecord.isEmpty()) throw new NoSuchElementException("Cannot find record with userId and recordId");
 
         return new ResponseEntity<>(mealService.deleteMeal(deleteRecord.get()),HttpStatus.OK);

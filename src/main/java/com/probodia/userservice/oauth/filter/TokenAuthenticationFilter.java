@@ -44,7 +44,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         AuthToken token = tokenProvider.convertAuthToken(tokenStr);
 
         String requestURI = request.getRequestURI();
-        log.info("request : {}",requestURI);
+        log.debug("request : {}",requestURI);
 
 
         if (token.validate()) {
@@ -55,7 +55,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
         else{
             if(!requestURI.startsWith("/api")){
-//                log.info("HELLO");
+//                log.debug("HELLO");
                 filterChain.doFilter(request,response);
                 return;
             }

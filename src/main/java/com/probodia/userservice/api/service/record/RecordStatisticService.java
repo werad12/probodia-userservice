@@ -38,10 +38,10 @@ public class RecordStatisticService {
 
     public RangeBSugarDto getBSugarRange(User user, String stdate, String endate) {
 
-//        log.info("LOW : {}, HIGH : {}",appProperties.getBloodSugar().getLow(), appProperties.getBloodSugar().getHigh());
+//        log.debug("LOW : {}, HIGH : {}",appProperties.getBloodSugar().getLow(), appProperties.getBloodSugar().getHigh());
 
 
-        log.info("start : {}, end : {}",stdate,endate);
+        log.debug("start : {}, end : {}",stdate,endate);
         List<Records> records = recordRepository.findAllByUserAndRecordDateBetweenAndType(user, stdate, endate,"SUGAR");
 
         int total = 0;
@@ -77,7 +77,7 @@ public class RecordStatisticService {
                     mid.getAndIncrement();
                 }
             }
-            log.info("SUGAR : {}, date : {}, timetag : {}",sugar.getBloodSugar(),r.getRecordDate(),timeTag);
+            log.debug("SUGAR : {}, date : {}, timetag : {}",sugar.getBloodSugar(),r.getRecordDate(),timeTag);
         });
 
         total = low.get() + mid.get() + high.get();
@@ -93,7 +93,7 @@ public class RecordStatisticService {
 
         List<MealDetail> mealDetails = mealDetailRepository.findAllByMealIn(mealList);
 
-//        mealDetails.forEach(m -> log.info("MEAL : {}",m.getFoodName()));
+//        mealDetails.forEach(m -> log.debug("MEAL : {}",m.getFoodName()));
 
         //foodId값으로 음식 정보 가져온다. Map으로 가져온다.
         List<String> foodIds = mealDetails.stream().map(MealDetail::getFoodId).collect(Collectors.toList());
@@ -108,7 +108,7 @@ public class RecordStatisticService {
         mealDetails.stream().forEach(m -> {
             Meal meal = m.getMeal();
             String date = meal.getRecordDate().substring(0,10);
-            log.info("DATE : {}",date);
+            log.debug("DATE : {}",date);
             String foodName = m.getFoodName();
             FoodInfoDto foodInfo = foodDetails.stream().filter(e -> e.getName().equals(foodName))
                     .findFirst()
@@ -143,7 +143,7 @@ public class RecordStatisticService {
         Double ret = 0.0;
 
         for(String key : map.keySet()){
-//            log.info(" VALUE : {}",proteinMap.get(key).get(0));
+//            log.debug(" VALUE : {}",proteinMap.get(key).get(0));
             Double dayAvg = 0.0;
             int daycnt = 0;
             for(Double d : map.get(key)){
@@ -169,7 +169,7 @@ public class RecordStatisticService {
 
         long diff = (en.getTime() - st.getTime()) /(1000 * 24 * 60 * 60) + 1;
         diff *= 4;
-        log.info("st : {}, en : {}, diff : {}, sz : {}",st,en,diff,records.size());
+        log.debug("st : {}, en : {}, diff : {}, sz : {}",st,en,diff,records.size());
 
         AtomicInteger morningCnt = new AtomicInteger();
         AtomicInteger noonCnt = new AtomicInteger();
@@ -178,15 +178,15 @@ public class RecordStatisticService {
         AtomicReference<String> prev = new AtomicReference<>("");
 
         records.stream().forEach(r -> {
-            log.info("IDX : {}",r.getId());
+            log.debug("IDX : {}",r.getId());
             if(r.getType().equals("SUGAR")){
-                log.info("TYPE : {}",r.getTimeTag().getValue());
+                log.debug("TYPE : {}",r.getTimeTag().getValue());
 
                 if (r.getTimeTag().getValue().equals("아침 식전")) {
                     if(!prev.equals(r.getRecordDate().substring(0,10))){
                         morningCnt.getAndIncrement();
                         prev.set(r.getRecordDate().substring(0, 10));
-                        log.info("PREV : {}",prev);
+                        log.debug("PREV : {}",prev);
                     }
                 }
                 else if(r.getTimeTag().getValue().equals("아침 식후")){
@@ -294,7 +294,7 @@ public class RecordStatisticService {
 
         avg /= records.size();
 
-        log.info("AVG : {}",avg);
+        log.debug("AVG : {}",avg);
 
         ret = (avg + 46.7)/28.7;
 

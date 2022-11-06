@@ -1,5 +1,7 @@
 package com.probodia.userservice.api.exception;
 
+import com.probodia.userservice.api.annotation.BasicError;
+import com.probodia.userservice.api.annotation.ValidationError;
 import com.probodia.userservice.common.ErrorResult;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -22,31 +24,37 @@ public class ExControllerAdvice implements ErrorController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ErrorResult userNotFoundExHandle(UsernameNotFoundException e) {
+    @BasicError
+    public ErrorResult userNotFoundException(UsernameNotFoundException e) {
         return new ErrorResult("Not found User", e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(TokenAuthException.class)
-    public ErrorResult tokenAuthExHandle(TokenAuthException e){
+    @BasicError
+    public ErrorResult tokenAuthException(TokenAuthException e){
         return new ErrorResult("Token Authentication Failed..",e.getMessage());
     }
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
-    public ErrorResult notFoundExHandle(NoSuchElementException e) {
+    @BasicError
+    public ErrorResult notFoundException(NoSuchElementException e) {
         return new ErrorResult("Not found Element", e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnAuthorizedException.class)
-    public ErrorResult unAuthorizedTokenHandle(UnAuthorizedException e){
+    @BasicError
+    public ErrorResult unAuthorizedTokenception(UnAuthorizedException e){
         return new ErrorResult("Unauthorized", e.getMessage());
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ValidationError
     public ErrorResult handleValidationExceptions(BindingResult bindingResult) {
         Map<String, String> errors = new HashMap<>();
         bindingResult.getAllErrors().forEach(c -> errors.put(((FieldError)c).getField() , c.getDefaultMessage()));
@@ -56,6 +64,7 @@ public class ExControllerAdvice implements ErrorController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @BasicError
     public ErrorResult handleIllegalArgsException(IllegalArgumentException e){
         return new ErrorResult("Illegal Argument. Try again.", e.getMessage());
     }

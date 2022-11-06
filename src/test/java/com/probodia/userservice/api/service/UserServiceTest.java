@@ -62,7 +62,7 @@ class UserServiceTest {
         User createUser = userService.createUser(userInfo);
         //User byUserId = userRepository.findByUserId(userId);
 
-        log.info("User : {}",createUser);
+        log.debug("User : {}",createUser);
 
         //Assertions.assertThat(createUser).isEqualTo(byUserId);
     }

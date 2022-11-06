@@ -92,8 +92,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        log.info("Make Refresh Token : {}",refreshToken.getToken());
-        log.info("Refresh Token role : {}", refreshToken.getTokenClaims().get("role"));
+        log.debug("Make Refresh Token : {}",refreshToken.getToken());
+        log.debug("Refresh Token role : {}", refreshToken.getTokenClaims().get("role"));
 
         // DB 저장
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());

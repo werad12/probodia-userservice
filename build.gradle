@@ -64,6 +64,10 @@ dependencies {
     //feigh client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    //sleuth + zipkin
+    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.4.RELEASE'
+
+
     //테스트에서 h2 db 사용
     implementation 'com.h2database:h2'
 

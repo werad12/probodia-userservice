@@ -30,7 +30,7 @@ public class RabbitListenerConfig {
 //        Jackson2JavaTypeMapper javaTypeMapper = messageConverter.getJavaTypeMapper();
 //        AbstractJavaTypeMapper javaTypeMapper1 = (AbstractJavaTypeMapper) javaTypeMapper;
 //        Map<String, Class<?>> idClassMapping = javaTypeMapper1.getIdClassMapping();
-//        idClassMapping.forEach((k,v) -> log.info("k : {}, v {}",k,v));
+//        idClassMapping.forEach((k,v) -> log.debug("k : {}, v {}",k,v));
 
 
         return messageConverter;
@@ -44,7 +44,7 @@ public class RabbitListenerConfig {
                 PointVO.class);
 //        idClassMapping.put("thing2", Thing2.class);
         classMapper.setIdClassMapping(idClassMapping);
-        log.info("CLASSMAPPER : {}", classMapper);
+        log.debug("CLASSMAPPER : {}", classMapper);
         return classMapper;
     }
 

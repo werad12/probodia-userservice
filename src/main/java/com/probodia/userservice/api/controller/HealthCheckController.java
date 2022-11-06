@@ -3,6 +3,7 @@ package com.probodia.userservice.api.controller;
 import com.probodia.userservice.config.properties.AppProperties;
 import com.probodia.userservice.config.rabbitmq.RabbitProducerConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
 @RequiredArgsConstructor
+@Slf4j
 public class HealthCheckController {
 
     @Value("${server.port}")
@@ -33,6 +35,15 @@ public class HealthCheckController {
         return "Server is working on port : "+ serverPort +
                 ",Server access token time : "+ appProperties.getAuth().getTokenExpiry();
 
+    }
+
+    @GetMapping("testSleuth")
+    public String testSleuth(){
+
+        log.debug("[testSleuth] : test Info level");
+        log.debug("[testSleuth] : test Debug level");
+
+        return "Ok";
     }
 
     @GetMapping("testrabbit")

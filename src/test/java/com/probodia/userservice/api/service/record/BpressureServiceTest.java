@@ -26,7 +26,7 @@ class BpressureServiceTest {
 
     @Test
     void savePressure() {
-        log.info("A");
+        log.debug("A");
     }
 
     @Test

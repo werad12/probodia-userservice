@@ -41,7 +41,7 @@ public class AuthToken {
     }
 
     private String createAuthToken(String id, String role, Date expiry) {
-        log.info("Create Auth Token {} , {}, {}", id,role,key.getEncoded());
+        log.debug("Create Auth Token {} , {}, {}", id,role,key.getEncoded());
         return Jwts.builder()
                 .setSubject(id)
                 .claim(AUTHORITIES_KEY, role)
@@ -51,7 +51,7 @@ public class AuthToken {
     }
 
     public boolean validate() {
-        log.info("validate : {}",this.getTokenClaims());
+        log.debug("validate : {}",this.getTokenClaims());
         return this.getTokenClaims() != null;
     }
 
@@ -79,18 +79,18 @@ public class AuthToken {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SecurityException e) {
-            log.info("Invalid JWT signature.");
+            log.debug("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
-            log.info("Invalid JWT token.");
+            log.debug("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
             expired = "Not invalid";
-            log.info("Expired JWT token.");
+            log.debug("Expired JWT token.");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
+            log.debug("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT token compact of handler are invalid.");
+            log.debug("JWT token compact of handler are invalid.");
         } catch (Exception e){
-            log.info("Token Auth failed");
+            log.debug("Token Auth failed");
         }
         return null;
     }
@@ -103,7 +103,7 @@ public class AuthToken {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
+            log.debug("Expired JWT token.");
             return e.getClaims();
         }
         return null;

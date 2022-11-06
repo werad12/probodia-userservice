@@ -50,7 +50,7 @@ class UserRepositoryTest {
         User savedUser = userRepository.findByUserId("testtesttest");
 
         assertThat(savedUser.getUserId()).isEqualTo("testtesttest");
-        log.info("user seq : {}",user.getUserSeq());
+        log.debug("user seq : {}",user.getUserSeq());
         assertThat(savedUser.getUsername()).isEqualTo("test1234");
         assertThat(savedUser.getProfileImageUrl()).isEqualTo("test.com");
 
@@ -74,7 +74,7 @@ class UserRepositoryTest {
         User savedUser = userRepository.findByUserId("testtesttest");
 
         assertThat(savedUser.getUserId()).isEqualTo("testtesttest");
-        log.info("user seq2 : {}",user.getUserSeq());
+        log.debug("user seq2 : {}",user.getUserSeq());
         assertThat(savedUser.getUsername()).isEqualTo("test1234");
         assertThat(savedUser.getProfileImageUrl()).isEqualTo("test.com");
 

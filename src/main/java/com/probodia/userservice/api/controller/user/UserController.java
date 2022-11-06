@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("/point")
     @ApiOperation(value = "챌린지로 포인트 변화시킨다.")
     public String setPoint(@RequestBody Integer point, @TokenRequired User user,@RequestParam("userId") String userId){
-        log.info("POINT {}",point);
+        log.debug("POINT {}",point);
 
         userService.updatePoint(userId, point);
 
@@ -42,7 +42,7 @@ public class UserController {
                                                       @NotNull(message = "User Id cannot be null")Long userId) {
 
 
-//        log.info("USER POINT : {}",user.getPoint());
+//        log.debug("USER POINT : {}",user.getPoint());
 
         //user의 정보 가져오기
         UserInfoDto userInfo = userService.getUserInfo(user);

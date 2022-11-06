@@ -14,7 +14,7 @@ public class ChallengeListener {
 
     @RabbitHandler
     public void listenerFood(PointVO request){
-        log.info("Req : {} {}",request.getUserId(), request.getPoint());
+        log.debug("Req : {} {}",request.getUserId(), request.getPoint());
 
     }
 

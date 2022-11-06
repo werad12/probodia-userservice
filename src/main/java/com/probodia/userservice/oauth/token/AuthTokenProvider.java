@@ -36,7 +36,7 @@ public class AuthTokenProvider {
     }
 
     public AuthToken convertAuthToken(String token) {
-        log.info("REFRESH TOKEN : {}",token);
+        log.debug("REFRESH TOKEN : {}",token);
         return new AuthToken(token, key);
     }
 
@@ -55,8 +55,8 @@ public class AuthTokenProvider {
         if(authToken.validate()) {
 
             Claims claims = authToken.getTokenClaims();
-//            log.info("CLAIM SUBJECT : {}",claims.getSubject());
-//            log.info("CLAIM : {}",claims.get(AUTHORITIES_KEY));
+//            log.debug("CLAIM SUBJECT : {}",claims.getSubject());
+//            log.debug("CLAIM : {}",claims.get(AUTHORITIES_KEY));
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
                             .map(SimpleGrantedAuthority::new)

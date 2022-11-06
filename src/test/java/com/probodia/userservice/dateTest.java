@@ -16,7 +16,7 @@ public class dateTest {
         String strDate = "2017-11-30 12:11:32";
         Date date = new Date(strDate);
 
-        log.info("Date : {}",date);
+        log.debug("Date : {}",date);
 
     }
 

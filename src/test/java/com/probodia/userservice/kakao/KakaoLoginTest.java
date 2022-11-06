@@ -68,16 +68,16 @@ public class KakaoLoginTest {
         Map<String,String> properties = (Map<String, String>) response.getBody().get("properties");
         String name = properties.get("nickname");
         String imageUrl = properties.get("thumbnail_image");
-        log.info("id : {}",id);
-        log.info("name : {}", name);
-        log.info("image Url : {}",imageUrl);
+        log.debug("id : {}",id);
+        log.debug("name : {}", name);
+        log.debug("image Url : {}",imageUrl);
 
     }
 
     @Test
     void getEnv(){
         String tokenVerifyUri = environment.getProperty("spring.security.oauth2.client.provider.kakao.userInfoUri");
-        log.info(tokenVerifyUri);
+        log.debug(tokenVerifyUri);
     }
 
 }
