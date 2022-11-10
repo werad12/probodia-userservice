@@ -1,9 +1,11 @@
 package com.probodia.userservice.api.controller.auth;
 
 import com.probodia.userservice.api.entity.auth.AuthReqModel;
+import com.probodia.userservice.api.entity.base.AppVersion;
 import com.probodia.userservice.api.entity.user.User;
 import com.probodia.userservice.api.entity.user.UserRefreshToken;
 import com.probodia.userservice.api.exception.UnAuthorizedException;
+import com.probodia.userservice.api.repository.base.VersionRepository;
 import com.probodia.userservice.api.repository.user.UserRefreshTokenRepository;
 import com.probodia.userservice.api.service.user.UserService;
 import com.probodia.userservice.api.dto.user.LoginResponseDto;
@@ -19,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +48,11 @@ public class AuthController {
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+    private final VersionRepository versionRepository;
+    @Value("${version.token}")
+    String masterToken;
+
+
 
     @GetMapping("/isCreated")
     @ApiOperation(value = "로그인 되었는지 확인")
@@ -53,6 +62,40 @@ public class AuthController {
         String uId = getUser(String.valueOf(userId));
         if(uId==null) return ResponseEntity.status(HttpStatus.OK).body(false);
         return ResponseEntity.status(HttpStatus.OK).body(true);
+    }
+
+    @GetMapping("/api/version/{userVersion}")
+    @ApiOperation(value = "앱 버전 확인")
+    public ResponseEntity<Boolean> getVersion(@PathVariable(name = "userVersion") @ApiParam(value = "userVersion", required = true,example = "12")
+            @NotNull(message = "User Version cannot be null")Integer userVersion){
+
+        Optional<AppVersion> version = versionRepository.findById(Long.valueOf(1));
+        if(version.isEmpty()) throw new IllegalArgumentException("No Version. Please try again");
+
+        Boolean canPass = version.get().getAppVersion()<= userVersion ? true : false;
+
+        return ResponseEntity.status(HttpStatus.OK).body(canPass);
+
+    }
+
+    @PostMapping("/version/{updateVersion}")
+    @ApiOperation(value = "앱 버전 변경{개발용}")
+    public ResponseEntity<Integer> updateVersion(@RequestHeader(value = "Authorization") @ApiParam(value = "마스터 토큰", required = true,example = "123123")
+                                                     @NotNull(message = "Token cannot be null")String token,
+                                                 @PathVariable(name = "updateVersion") @ApiParam(value = "updateVersion", required = true,example = "12")
+                                                 @NotNull(message = "Update Version cannot be null")Integer updateVersion){
+
+        log.info("Token : {}",token);
+        log.info("MAster : {}",masterToken);
+
+        if(!masterToken.equals(token)) throw new IllegalArgumentException("Retry with master token");
+
+        Optional<AppVersion> version = versionRepository.findById(Long.valueOf(1));
+
+        version.get().setAppVersion(updateVersion);
+        versionRepository.saveAndFlush(version.get());
+
+        return ResponseEntity.status(HttpStatus.OK).body(version.get().getAppVersion());
     }
 
     @PostMapping("/login")
