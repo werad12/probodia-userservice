@@ -79,6 +79,9 @@ dependencies {
 //    testCompileOnly 'org.mapstruct:mapstruct'
 //    implementation 'org.mapstruct:mapstruct-processor'
 
+    //logstash
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.6'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
