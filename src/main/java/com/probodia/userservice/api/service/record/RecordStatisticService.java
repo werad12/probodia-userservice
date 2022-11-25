@@ -294,7 +294,7 @@ public class RecordStatisticService {
 
         avg /= records.size();
 
-        log.debug("AVG : {}",avg);
+        log.info("AVG : {}",avg);
 
         ret = (avg + 46.7)/28.7;
 
